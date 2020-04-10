@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace pdj.tiny7z.Compression
+namespace Tiny7z.Compression
 {
-    class BcjDecoderStream : DecoderStream
+	class BcjDecoderStream : DecoderStream
     {
         private static readonly bool[] kMaskToAllowedStatus = { true, true, true, false, true, false, false, false };
         private static readonly byte[] kMaskToBitNumber = { 0, 1, 2, 2, 3, 3, 3, 3 };

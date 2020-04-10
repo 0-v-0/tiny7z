@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using ManagedLzma.LZMA;
 using LZMA = ManagedLzma.LZMA.Master.LZMA;
 
-namespace pdj.tiny7z.Compression
+namespace Tiny7z.Compression
 {
-    class LzmaDecoderStream : DecoderStream
+	class LzmaDecoderStream : DecoderStream
     {
         private Stream mInputStream;
         private LZMA.CLzmaDec mDecoder;

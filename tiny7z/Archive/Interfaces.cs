@@ -1,9 +1,9 @@
-﻿using pdj.tiny7z.Common;
+﻿using Tiny7z.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace pdj.tiny7z.Archive
+namespace Tiny7z.Archive
 {
     /// <summary>
     /// Possible results of a feedback request
@@ -20,7 +20,7 @@ namespace pdj.tiny7z.Archive
     /// </summary>
     /// <param name="files">List of files that are requiring feedback to continue</param>
     /// <returns>TRUE or FALSE depending on received feedback</returns>
-    public delegate FeedbackResult FeedbackNeededDelegate (IEnumerable<ArchiveFile> files);
+    public delegate FeedbackResult FeedbackNeededDelegate(IEnumerable<ArchiveFile> files);
 
     /// <summary>
     /// User progress delegate called by IProgressProvider implementation

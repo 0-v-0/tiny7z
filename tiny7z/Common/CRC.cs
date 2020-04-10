@@ -1,57 +1,32 @@
 ﻿using System.IO;
 
-namespace pdj.tiny7z.Common
+namespace Tiny7z.Common
 {
-    /// <summary>
-    /// CRC calculations helper class
-    /// </summary>
-    public class CRC
+    public static class CRC
     {
         public static uint[] Table
         {
             get; private set;
         }
 
-        public uint Result
+
+        public static uint Calculate(byte[] data)
         {
-            get => ~crc;
-        }
-
-        public CRC(uint crc = 0xffffffff)
-        {
-            this.crc = crc;
-        }
-
-        private uint crc;
-
-        public CRC Calculate(byte data)
-        {
-            byte index = (byte)(((crc) & 0xff) ^ data);
-            crc = (uint)((crc >> 8) ^ Table[index]);
-            return this;
-        }
-
-        public CRC Calculate(byte[] data, int offset = 0, int count = -1)
-        {
-            if (count == -1)
-                count = data.Length - offset;
-
-            if (count > 0)
+            uint crc = 0xffffffff;
+            for (int i = 0; i < data.Length; ++i)
             {
-                for (int i = 0; i < count; ++i)
-                {
-                    byte index = (byte)(((crc) & 0xff) ^ data[offset + i]);
-                    crc = (uint)((crc >> 8) ^ Table[index]);
-                }
+                byte index = (byte)(((crc) & 0xff) ^ data[i]);
+                crc = (uint)((crc >> 8) ^ Table[index]);
             }
-            return this;
+            return ~crc;
         }
 
-        public CRC Calculate(Stream stream)
+        public static uint Calculate(Stream stream)
         {
             int bufferSize = 1048576;
             byte[] buffer = new byte[bufferSize];
 
+            uint crc = 0xffffffff;
             long r = 0;
             while ((r = stream.Read(buffer, 0, bufferSize)) > 0)
             {
@@ -61,7 +36,7 @@ namespace pdj.tiny7z.Common
                     crc = (uint)((crc >> 8) ^ Table[index]);
                 }
             }
-            return this;
+            return ~crc;
         }
 
         static CRC()

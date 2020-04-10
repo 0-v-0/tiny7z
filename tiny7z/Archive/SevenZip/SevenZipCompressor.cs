@@ -1,4 +1,4 @@
-﻿using pdj.tiny7z.Common;
+﻿using Tiny7z.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace pdj.tiny7z.Archive
+namespace Tiny7z.Archive
 {
     /// <summary>
     /// 7zip compressor class to compress files into an archive.
@@ -43,12 +43,12 @@ namespace pdj.tiny7z.Archive
         #region Public Methods
         public void Dispose() // IDisposable
         {
-            if (this.stream != null && this.header != null)
+            if (stream != null && header != null)
             {
                 Finalize();
             }
-            this.stream = null;
-            this.header = null;
+            stream = null;
+            header = null;
         }
 
         public ICompressor AddDirectory(string inputDirectory, string archiveDirectory = null, bool recursive = true)
@@ -74,7 +74,7 @@ namespace pdj.tiny7z.Archive
                             Name = dirName,
                             Size = 0,
                             Time = dir.LastWriteTimeUtc,
-                            Attributes = (UInt32)dir.Attributes,
+                            Attributes = (uint)dir.Attributes,
                             IsEmpty = true,
                             IsDirectory = true,
                             IsDeleted = false,
@@ -89,9 +89,9 @@ namespace pdj.tiny7z.Archive
                     addedFiles.Add(new SevenZipArchiveFile()
                     {
                         Name = fileName,
-                        Size = (UInt64)file.Length,
+                        Size = (ulong)file.Length,
                         Time = (DateTime)file.LastWriteTimeUtc,
-                        Attributes = (UInt32)file.Attributes,
+                        Attributes = (uint)file.Attributes,
                         IsEmpty = (file.Length == 0),
                         IsDirectory = false,
                         IsDeleted = false,
@@ -122,9 +122,9 @@ namespace pdj.tiny7z.Archive
             _Files.Add(new SevenZipArchiveFile()
             {
                 Name = archiveFileName,
-                Size = (UInt64)fileInfo.Length,
+                Size = (ulong)fileInfo.Length,
                 Time = (DateTime)fileInfo.LastWriteTimeUtc,
-                Attributes = (UInt32)fileInfo.Attributes,
+                Attributes = (uint)fileInfo.Attributes,
                 IsEmpty = (fileInfo.Length == 0),
                 IsDirectory = false,
                 IsDeleted = false,
@@ -142,7 +142,7 @@ namespace pdj.tiny7z.Archive
             _Files.Add(new SevenZipArchiveFile()
             {
                 Name = archiveFileName,
-                Size = (UInt64)stream.Length,
+                Size = (ulong)stream.Length,
                 Time = time,
                 Attributes = 0,
                 IsEmpty = (stream.Length == 0),
@@ -156,7 +156,7 @@ namespace pdj.tiny7z.Archive
 
         public ICompressor Finalize()
         {
-            if (this.stream == null || this.header == null)
+            if (stream == null || header == null)
                 throw new SevenZipException("Compressor object has already been finalized.");
 
             Trace.TraceInformation($"Compressing files.");
@@ -183,7 +183,7 @@ namespace pdj.tiny7z.Archive
                     szpp = new SevenZipProgressProvider(_Files, new ulong[0], ProgressDelegate);
 
                 // compress files
-                this.header.RawHeader.MainStreamsInfo = new SevenZipHeader.StreamsInfo();
+                header.RawHeader.MainStreamsInfo = new SevenZipHeader.StreamsInfo();
                 if (Solid && streamIndex > 1)
                 {
                     compressFilesSolid(streamIndex, streamToFileIndex, szpp);
@@ -202,8 +202,8 @@ namespace pdj.tiny7z.Archive
                 Trace.TraceInformation("Done compressing files.");
             }
 
-            this.stream = null;
-            this.header = null;
+            stream = null;
+            header = null;
             return this;
         }
         #endregion Public Methods
@@ -253,7 +253,7 @@ namespace pdj.tiny7z.Archive
             SevenZipStreamsCompressor.PackedStream cs = sc.Compress(inputStream, progressProvider);
 
             // build headers
-            var streamsInfo = this.header.RawHeader.MainStreamsInfo;
+            var streamsInfo = header.RawHeader.MainStreamsInfo;
             streamsInfo.PackInfo = new SevenZipHeader.PackInfo()
             {
                 NumPackStreams = cs.NumStreams,
@@ -275,17 +275,17 @@ namespace pdj.tiny7z.Archive
             streamsInfo.UnPackInfo.Folders[0].UnPackCRC = null;
             streamsInfo.SubStreamsInfo = new SevenZipHeader.SubStreamsInfo(streamsInfo.UnPackInfo)
             {
-                NumUnPackStreamsInFolders = new UInt64[1]
+                NumUnPackStreamsInFolders = new ulong[1]
                 {
                     numStreams
                 },
                 NumUnPackStreamsTotal = numStreams,
-                UnPackSizes = new List<UInt64>((int)numStreams),
+                UnPackSizes = new List<ulong>((int)numStreams),
                 Digests = new SevenZipHeader.Digests(numStreams)
             };
             for (ulong i = 0; i < numStreams; ++i)
             {
-                streamsInfo.SubStreamsInfo.UnPackSizes.Add((UInt64)inputStream.Sizes[i]);
+                streamsInfo.SubStreamsInfo.UnPackSizes.Add((ulong)inputStream.Sizes[i]);
                 streamsInfo.SubStreamsInfo.Digests.CRCs[i] = inputStream.CRCs[i];
             }
         }
@@ -310,12 +310,12 @@ namespace pdj.tiny7z.Archive
             }
 
             // build headers
-            var streamsInfo = this.header.RawHeader.MainStreamsInfo;
+            var streamsInfo = header.RawHeader.MainStreamsInfo;
             streamsInfo.PackInfo = new SevenZipHeader.PackInfo()
             {
                 NumPackStreams = numPackStreams,
                 PackPos = 0,
-                Sizes = new UInt64[numPackStreams],
+                Sizes = new ulong[numPackStreams],
                 Digests = new SevenZipHeader.Digests(numPackStreams)
             };
             streamsInfo.UnPackInfo = new SevenZipHeader.UnPackInfo()
@@ -326,9 +326,9 @@ namespace pdj.tiny7z.Archive
 
             streamsInfo.SubStreamsInfo = new SevenZipHeader.SubStreamsInfo(streamsInfo.UnPackInfo)
             {
-                NumUnPackStreamsInFolders = Enumerable.Repeat((UInt64)1, (int)numStreams).ToArray(),
+                NumUnPackStreamsInFolders = Enumerable.Repeat((ulong)1, (int)numStreams).ToArray(),
                 NumUnPackStreamsTotal = numStreams,
-                UnPackSizes = new List<UInt64>((int)numStreams),
+                UnPackSizes = new List<ulong>((int)numStreams),
                 Digests = new SevenZipHeader.Digests(numStreams)
             };
 
@@ -339,7 +339,7 @@ namespace pdj.tiny7z.Archive
                     streamsInfo.PackInfo.Sizes[k] = css[i].Sizes[j];
                     streamsInfo.PackInfo.Digests.CRCs[k] = css[i].CRCs[j];
                 }
-                streamsInfo.SubStreamsInfo.UnPackSizes.Add((UInt64)css[i].Folder.GetUnPackSize());
+                streamsInfo.SubStreamsInfo.UnPackSizes.Add((ulong)css[i].Folder.GetUnPackSize());
                 streamsInfo.SubStreamsInfo.Digests.CRCs[i] = css[i].Folder.UnPackCRC;
                 css[i].Folder.UnPackCRC = null;
                 streamsInfo.UnPackInfo.Folders[i] = css[i].Folder;
@@ -349,7 +349,7 @@ namespace pdj.tiny7z.Archive
         private void writeHeaders()
         {
             // current position is defined as end of packed streams and beginning of header
-            long endOfPackedStreamsPosition = this.stream.Position;
+            long endOfPackedStreamsPosition = stream.Position;
 
             // write headers in temporary stream
             var headerStream = new MemoryStream();
@@ -372,7 +372,7 @@ namespace pdj.tiny7z.Archive
                     PackInfo = new SevenZipHeader.PackInfo()
                     {
                         NumPackStreams = cs.NumStreams,
-                        PackPos = (UInt64)(endOfPackedStreamsPosition - Marshal.SizeOf(typeof(SevenZipArchive.SignatureHeader))),
+                        PackPos = (ulong)(endOfPackedStreamsPosition - Marshal.SizeOf(typeof(SevenZipArchive.SignatureHeader))),
                         Sizes = cs.Sizes,
                         Digests = new SevenZipHeader.Digests(1)
                         {
@@ -396,16 +396,16 @@ namespace pdj.tiny7z.Archive
                 header.Write(headerStream);
 
                 // update new end of packed position for encoded header
-                endOfPackedStreamsPosition = this.stream.Position;
+                endOfPackedStreamsPosition = stream.Position;
             }
 
             // create start header and calculate header crc
             headerStream.Position = 0;
             var startHeader = new SevenZipArchive.StartHeader()
             {
-                NextHeaderOffset = (UInt64)(endOfPackedStreamsPosition - Marshal.SizeOf(typeof(SevenZipArchive.SignatureHeader))),
-                NextHeaderSize = (UInt64)headerStream.Length,
-                NextHeaderCRC = new CRC().Calculate(headerStream).Result
+                NextHeaderOffset = (ulong)(endOfPackedStreamsPosition - Marshal.SizeOf(typeof(SevenZipArchive.SignatureHeader))),
+                NextHeaderSize = (ulong)headerStream.Length,
+                NextHeaderCRC = CRC.Calculate(headerStream)
             };
 
             // write headers at the end of output stream
@@ -422,7 +422,7 @@ namespace pdj.tiny7z.Archive
                     Major = 0,
                     Minor = 2,
                 },
-                StartHeaderCRC = new CRC().Calculate(startHeader.GetByteArray()).Result,
+                StartHeaderCRC = CRC.Calculate(startHeader.GetByteArray()),
                 StartHeader = startHeader
             };
 
@@ -437,9 +437,9 @@ namespace pdj.tiny7z.Archive
             // scan files for empty streams and files (directories and zero-length files)
 
             bool[] emptyStreams = new bool[_Files.LongCount()];
-            UInt64 numEmptyStreams = 0;
+            ulong numEmptyStreams = 0;
             bool[] emptyFiles = new bool[_Files.LongCount()];
-            UInt64 numEmptyFiles = 0;
+            ulong numEmptyFiles = 0;
             for (long i = 0; i < _Files.LongCount(); ++i)
             {
                 var file = _Files[(int)i];
@@ -478,7 +478,7 @@ namespace pdj.tiny7z.Archive
             };
             var propertyAttr = new SevenZipHeader.PropertyAttributes((ulong)_Files.LongCount())
             {
-                Attributes = new UInt32?[_Files.LongCount()]
+                Attributes = new uint?[_Files.LongCount()]
             };
             for (long i = 0; i < _Files.LongCount(); ++i)
             {

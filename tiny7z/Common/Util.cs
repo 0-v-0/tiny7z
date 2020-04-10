@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 
-namespace pdj.tiny7z.Common
+namespace Tiny7z.Common
 {
-    public static class Util
+	public static class Util
     {
         /// <summary>
         /// Alternative stream copy method to CopyTo. Stops writing when count is reached.

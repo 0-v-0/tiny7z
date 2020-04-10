@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace pdj.tiny7z.Common
+namespace Tiny7z.Common
 {
     /// <summary>
     /// MultiStream - Allows a multiple number of streams to be treated as one. Stream obtained (and get ownership) from delegate.
@@ -18,7 +18,7 @@ namespace pdj.tiny7z.Common
             onCloseStream?.Invoke((ulong)currentIndex, internalStream);
         }
 
-        public MultiStream(UInt64 numStreams, Func<ulong, Stream> onNextStream, Action<ulong, Stream> onCloseStream = null)
+        public MultiStream(ulong numStreams, Func<ulong, Stream> onNextStream, Action<ulong, Stream> onCloseStream = null)
             : base(numStreams)
         {
             this.onNextStream = onNextStream;

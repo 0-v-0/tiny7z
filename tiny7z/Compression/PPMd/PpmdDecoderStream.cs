@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 
-namespace pdj.tiny7z.Compression
+namespace Tiny7z.Compression
 {
-    class PpmdDecoderStream : DecoderStream
+	class PpmdDecoderStream : DecoderStream
     {
         private Stream mInput;
         private long mLength;
@@ -237,7 +234,7 @@ namespace pdj.tiny7z.Compression
 
             public CPpmd_State_Ref(uint value)
             {
-                this.Value = value;
+                Value = value;
             }
 
             public static implicit operator CPpmd_State_Ref(CPpmd_Void_Ref r)
@@ -258,7 +255,7 @@ namespace pdj.tiny7z.Compression
 
             public CPpmd_Void_Ref(uint value)
             {
-                this.Value = value;
+                Value = value;
             }
 
             public static bool operator ==(CPpmd_Void_Ref lhs, CPpmd_Void_Ref rhs) => lhs.Value == rhs.Value;
@@ -272,7 +269,7 @@ namespace pdj.tiny7z.Compression
 
             public CPpmd_Byte_Ref(uint value)
             {
-                this.Value = value;
+                Value = value;
             }
 
             public static implicit operator CPpmd_Void_Ref(CPpmd_Byte_Ref r) => new CPpmd_Void_Ref(r.Value);
@@ -304,7 +301,7 @@ namespace pdj.tiny7z.Compression
 
             public CPpmd7_Context_Ref(uint value)
             {
-                this.Value = value;
+                Value = value;
             }
 
             public static implicit operator CPpmd7_Context_Ref(CPpmd_Void_Ref r)
@@ -484,7 +481,7 @@ namespace pdj.tiny7z.Compression
 
             public CPpmd7_Node_Ref(uint value)
             {
-                this.Value = value;
+                Value = value;
             }
 
             public static bool operator ==(CPpmd7_Node_Ref lhs, CPpmd7_Node_Ref rhs) => lhs.Value == rhs.Value;
@@ -576,7 +573,7 @@ namespace pdj.tiny7z.Compression
 
         private static void* RemoveNode(CPpmd7 p, uint indx)
         {
-            CPpmd_Void_Ref* node = (CPpmd_Void_Ref*)Ppmd7_GetPtr(p, p.FreeList[indx]);
+            var node = (CPpmd_Void_Ref*)Ppmd7_GetPtr(p, p.FreeList[indx]);
             p.FreeList[indx] = *node;
             return node;
         }
@@ -596,7 +593,7 @@ namespace pdj.tiny7z.Compression
 
         private static void GlueFreeBlocks(CPpmd7 p)
         {
-            CPpmd7_Node_Ref head = new CPpmd7_Node_Ref(p.AlignOffset + p.Size);
+            var head = new CPpmd7_Node_Ref(p.AlignOffset + p.Size);
             CPpmd7_Node_Ref n = head;
             uint i;
 
@@ -606,7 +603,7 @@ namespace pdj.tiny7z.Compression
             for (i = 0; i < PPMD_NUM_INDEXES; i++)
             {
                 ushort nu = I2U(p, i);
-                CPpmd7_Node_Ref next = (CPpmd7_Node_Ref)p.FreeList[i];
+                var next = (CPpmd7_Node_Ref)p.FreeList[i];
                 p.FreeList[i] = default(CPpmd_Void_Ref);
                 while (next.Value != 0)
                 {
@@ -764,7 +761,7 @@ namespace pdj.tiny7z.Compression
             p.GlueCount = 0;
 
             p.OrderFall = p.MaxOrder;
-            p.RunLength = p.InitRL = -(Int32)((p.MaxOrder < 12) ? p.MaxOrder : 12) - 1;
+            p.RunLength = p.InitRL = -(int)((p.MaxOrder < 12) ? p.MaxOrder : 12) - 1;
             p.PrevSuccess = 0;
 
             p.MinContext = p.MaxContext = (CPpmd7_Context*)(p.HiUnit -= UNIT_SIZE); /* AllocContext(p); */
@@ -813,8 +810,8 @@ namespace pdj.tiny7z.Compression
         {
             CPpmd_State upState;
             CPpmd7_Context* c = p.MinContext;
-            CPpmd_Byte_Ref upBranch = (CPpmd_Byte_Ref)SUCCESSOR(p.FoundState);
-            CPpmd_State*[] ps = new CPpmd_State*[PPMD7_MAX_ORDER];
+            var upBranch = (CPpmd_Byte_Ref)SUCCESSOR(p.FoundState);
+            var ps = new CPpmd_State*[PPMD7_MAX_ORDER];
             uint numPs = 0;
 
             if (!skip)
@@ -1007,7 +1004,7 @@ namespace pdj.tiny7z.Compression
                 }
                 else
                 {
-                    CPpmd_State* s = (CPpmd_State*)AllocUnits(p, 0);
+                    var s = (CPpmd_State*)AllocUnits(p, 0);
                     if (s == null)
                     {
                         RestartModel(p);
@@ -1204,7 +1201,7 @@ namespace pdj.tiny7z.Compression
 
         private static uint Range_GetThreshold(object pp, uint total)
         {
-            CPpmd7z_RangeDec p = (CPpmd7z_RangeDec)pp;
+            var p = (CPpmd7z_RangeDec)pp;
             return (p.Code) / (p.Range /= total);
         }
 
@@ -1224,7 +1221,7 @@ namespace pdj.tiny7z.Compression
 
         private static void Range_Decode(object pp, uint start, uint size)
         {
-            CPpmd7z_RangeDec p = (CPpmd7z_RangeDec)pp;
+            var p = (CPpmd7z_RangeDec)pp;
             p.Code -= start * p.Range;
             p.Range *= size;
             Range_Normalize(p);
@@ -1232,7 +1229,7 @@ namespace pdj.tiny7z.Compression
 
         private static uint Range_DecodeBit(object pp, uint size0)
         {
-            CPpmd7z_RangeDec p = (CPpmd7z_RangeDec)pp;
+            var p = (CPpmd7z_RangeDec)pp;
             uint newBound = (p.Range >> 14) * size0;
             uint symbol;
             if (p.Code < newBound)

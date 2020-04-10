@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ManagedLzma.LZMA.Master
+﻿namespace ManagedLzma.LZMA.Master
 {
-    partial class LZMA
+	partial class LZMA
     {
         public sealed class CLzma2EncProps
         {
@@ -39,7 +34,7 @@ namespace ManagedLzma.LZMA.Master
 
             public void Lzma2EncProps_Normalize()
             {
-                CLzmaEncProps normalizedLzmaProps = new CLzmaEncProps(mLzmaProps);
+                var normalizedLzmaProps = new CLzmaEncProps(mLzmaProps);
                 normalizedLzmaProps.LzmaEncProps_Normalize();
                 int tempThreadsNormalized = normalizedLzmaProps.mNumThreads;
                 int tempThreads = mLzmaProps.mNumThreads;
@@ -173,9 +168,9 @@ namespace ManagedLzma.LZMA.Master
                 mEnc.LzmaEnc_SaveState();
                 SRes res = mEnc.LzmaEnc_CodeOneMemBlock(mNeedInitState, outBuf + lzHeaderSize, ref packSize, LZMA2_PACK_SIZE_MAX, ref unpackSize);
 
-                TR("Lzma2EncInt_EncodeSubblock:packSize", checked((int)packSize));
-                TR("Lzma2EncInt_EncodeSubblock:unpackSize", unpackSize);
-                DebugPrint("\npackSize = {0:0000000} unpackSize = {1:0000000}  ", packSize, unpackSize);
+                //TR("Lzma2EncInt_EncodeSubblock:packSize", checked((int)packSize));
+                //TR("Lzma2EncInt_EncodeSubblock:unpackSize", unpackSize);
+                //DebugPrint("\npackSize = {0:0000000} unpackSize = {1:0000000}  ", packSize, unpackSize);
 
                 if (unpackSize == 0)
                     return res;
@@ -194,7 +189,7 @@ namespace ManagedLzma.LZMA.Master
                 if (useCopyBlock)
                 {
                     long destPos = 0;
-                    DebugPrint("################# COPY           ");
+                    //DebugPrint("################# COPY           ");
 
                     while (unpackSize > 0)
                     {
@@ -246,7 +241,7 @@ namespace ManagedLzma.LZMA.Master
                     else
                         mode = 2;
 
-                    DebugPrint("               ");
+                    //DebugPrint("               ");
 
                     outBuf[destPos++] = (byte)(LZMA2_CONTROL_LZMA | (mode << 5) | ((u >> 16) & 0x1F));
                     outBuf[destPos++] = (byte)(u >> 8);
@@ -400,23 +395,23 @@ namespace ManagedLzma.LZMA.Master
 
             public SRes Lzma2Enc_SetProps(CLzma2EncProps props)
             {
-                TR("Lzma2Enc_SetProps:level", props.mLzmaProps.mLevel);
-                TR("Lzma2Enc_SetProps:dictSize", props.mLzmaProps.mDictSize);
-                TR("Lzma2Enc_SetProps:lc", props.mLzmaProps.mLC);
-                TR("Lzma2Enc_SetProps:lp", props.mLzmaProps.mLP);
-                TR("Lzma2Enc_SetProps:pb", props.mLzmaProps.mPB);
-                TR("Lzma2Enc_SetProps:algo", props.mLzmaProps.mAlgo);
-                TR("Lzma2Enc_SetProps:fb", props.mLzmaProps.mFB);
-                TR("Lzma2Enc_SetProps:btMode", props.mLzmaProps.mBtMode);
-                TR("Lzma2Enc_SetProps:numHashBytes", props.mLzmaProps.mNumHashBytes);
-                TR("Lzma2Enc_SetProps:mc", props.mLzmaProps.mMC);
-                TR("Lzma2Enc_SetProps:writeEndMark", props.mLzmaProps.mWriteEndMark);
-                TR("Lzma2Enc_SetProps:numThreads", props.mLzmaProps.mNumThreads);
-                TR("Lzma2Enc_SetProps:blockSize", checked((int)props.mBlockSize));
-                TR("Lzma2Enc_SetProps:numBlockThreads", props.mNumBlockThreads);
-                TR("Lzma2Enc_SetProps:numTotalThreads", props.mNumTotalThreads);
+                //TR("Lzma2Enc_SetProps:level", props.mLzmaProps.mLevel);
+                //TR("Lzma2Enc_SetProps:dictSize", props.mLzmaProps.mDictSize);
+                //TR("Lzma2Enc_SetProps:lc", props.mLzmaProps.mLC);
+                //TR("Lzma2Enc_SetProps:lp", props.mLzmaProps.mLP);
+                //TR("Lzma2Enc_SetProps:pb", props.mLzmaProps.mPB);
+                //TR("Lzma2Enc_SetProps:algo", props.mLzmaProps.mAlgo);
+                //TR("Lzma2Enc_SetProps:fb", props.mLzmaProps.mFB);
+                //TR("Lzma2Enc_SetProps:btMode", props.mLzmaProps.mBtMode);
+                //TR("Lzma2Enc_SetProps:numHashBytes", props.mLzmaProps.mNumHashBytes);
+                //TR("Lzma2Enc_SetProps:mc", props.mLzmaProps.mMC);
+                //TR("Lzma2Enc_SetProps:writeEndMark", props.mLzmaProps.mWriteEndMark);
+                //TR("Lzma2Enc_SetProps:numThreads", props.mLzmaProps.mNumThreads);
+                //TR("Lzma2Enc_SetProps:blockSize", checked((int)props.mBlockSize));
+                //TR("Lzma2Enc_SetProps:numBlockThreads", props.mNumBlockThreads);
+                //TR("Lzma2Enc_SetProps:numTotalThreads", props.mNumTotalThreads);
 
-                CLzmaEncProps lzmaProps = new CLzmaEncProps(props.mLzmaProps);
+                var lzmaProps = new CLzmaEncProps(props.mLzmaProps);
                 lzmaProps.LzmaEncProps_Normalize();
                 if (lzmaProps.mLC + lzmaProps.mLP > LZMA2_LCLP_MAX)
                     return SZ_ERROR_PARAM;
@@ -439,7 +434,7 @@ namespace ManagedLzma.LZMA.Master
                 while (i < 40 && dicSize > LZMA2_DIC_SIZE_FROM_PROP(i))
                     i++;
 
-                TR("Lzma2Enc_WriteProperties", i);
+                //TR("Lzma2Enc_WriteProperties", i);
                 return (byte)i;
             }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace pdj.tiny7z.Compression
+namespace Tiny7z.Compression
 {
     /// <summary>
     /// Basic abstract class from which most decoder streams derive from. Simplifies Stream implementation.

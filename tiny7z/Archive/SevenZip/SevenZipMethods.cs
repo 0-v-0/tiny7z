@@ -1,9 +1,8 @@
-﻿using pdj.tiny7z.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace pdj.tiny7z.Archive
+namespace Tiny7z.Archive
 {
     public static class SevenZipMethods
     {
@@ -171,7 +170,7 @@ namespace pdj.tiny7z.Archive
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message + ex.StackTrace);
+                //System.Diagnostics.Debug.WriteLine(ex.Message + ex.StackTrace);
             }
         }
     }

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace pdj.tiny7z.Compression
+namespace Tiny7z.Compression
 {
-    internal class AesDecoderStream : DecoderStream
+	internal class AesDecoderStream : DecoderStream
     {
         #region Variables
 
@@ -183,7 +181,7 @@ namespace pdj.tiny7z.Compression
             }
             else
             {
-                using (var sha = System.Security.Cryptography.SHA256.Create())
+                using (var sha = SHA256.Create())
                 {
                     byte[] counter = new byte[8];
                     long numRounds = 1L << mNumCyclesPower;

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ManagedLzma.LZMA.Master
+﻿namespace ManagedLzma.LZMA.Master
 {
-    partial class LZMA
+	partial class LZMA
     {
         /*
         RAM requirements for LZMA:
@@ -100,7 +95,7 @@ namespace ManagedLzma.LZMA.Master
             int fb,        /* 5 <= fb <= 273, default = 32 */
             int numThreads) /* 1 or 2, default = 2 */
         {
-            CLzmaEncProps props = CLzmaEncProps.LzmaEncProps_Init();
+            var props = CLzmaEncProps.LzmaEncProps_Init();
             props.mLevel = level;
             props.mDictSize = dictSize;
             props.mLC = lc;

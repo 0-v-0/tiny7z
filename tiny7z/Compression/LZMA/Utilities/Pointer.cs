@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ManagedLzma.LZMA
+﻿namespace ManagedLzma.LZMA
 {
-    internal static class P
+	internal static class P
     {
         public static P<T> From<T>(T[] buffer, int offset)
         {

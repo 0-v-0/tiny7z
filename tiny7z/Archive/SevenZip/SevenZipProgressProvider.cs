@@ -1,11 +1,11 @@
-﻿using pdj.tiny7z.Common;
+﻿using Tiny7z.Common;
 using ManagedLzma.LZMA.Master;
 using System;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 
-namespace pdj.tiny7z.Archive
+namespace Tiny7z.Archive
 {
     internal class SevenZipProgressProvider : IProgressProvider, LZMA.ICompressProgress
     {
@@ -20,12 +20,12 @@ namespace pdj.tiny7z.Archive
             get; set;
         }
 
-        public UInt64 RawTotalSize
+        public ulong RawTotalSize
         {
             get; private set;
         }
 
-        public UInt64 TotalSize
+        public ulong TotalSize
         {
             get; private set;
         }
@@ -81,19 +81,19 @@ namespace pdj.tiny7z.Archive
         #endregion Public Methods (LZMA.ICompressProgress)
 
         #region Internal Constructor
-        internal SevenZipProgressProvider(IList<SevenZipArchiveFile> files, IList<UInt64> indices, ProgressDelegate progressFunc = null)
+        internal SevenZipProgressProvider(IList<SevenZipArchiveFile> files, IList<ulong> indices, ProgressDelegate progressFunc = null)
         {
             this.files = files;
             if (indices.Any())
             {
-                this.matches = new bool[this.files.Count + 1];
+                matches = new bool[this.files.Count + 1];
                 foreach (var index in indices)
-                    this.matches[index] = true;
+                    matches[index] = true;
             }
             else
             {
-                this.matches = Enumerable.Repeat(true, this.files.Count + 1).ToArray();
-                this.matches[this.files.Count] = false;
+                matches = Enumerable.Repeat(true, this.files.Count + 1).ToArray();
+                matches[this.files.Count] = false;
             }
 
             Files = new ReadOnlyCollection<SevenZipArchiveFile>(this.files);

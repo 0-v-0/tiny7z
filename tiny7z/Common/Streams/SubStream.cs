@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
+
 using System.IO;
 
-namespace pdj.tiny7z.Common
+namespace Tiny7z.Common
 {
-    /// <summary>
-    /// Stream that restricts access from another stream to specific boundaries.
-    /// </summary>
     public class SubStream : Stream
     {
         public override bool CanRead => internalStream is Stream && internalStream.CanRead;
@@ -25,18 +22,14 @@ namespace pdj.tiny7z.Common
             }
         }
 
-        public SubStream()
-            : base()
-        {
-        }
+        public SubStream() : base() { }
 
-        public SubStream(Stream stream)
-            : base()
+        public SubStream(Stream stream) : base()
         {
-            this.internalStream = stream;
-            this.startOffset = 0;
-            this.windowSize = stream.Length;
-            this.currentOffset = stream.Position;
+            internalStream = stream;
+            startOffset = 0;
+            windowSize = stream.Length;
+            currentOffset = stream.Position;
         }
 
         public SubStream(Stream stream, long startOffset, long windowSize)
@@ -47,10 +40,10 @@ namespace pdj.tiny7z.Common
             if (windowSize <= 0 || windowSize + startOffset > stream.Length)
                 throw new ArgumentOutOfRangeException(nameof(windowSize));
 
-            this.internalStream = stream;
+            internalStream = stream;
             this.startOffset = startOffset;
             this.windowSize = windowSize;
-            this.currentOffset = startOffset;
+            currentOffset = startOffset;
         }
 
         private Stream internalStream;
@@ -74,7 +67,7 @@ namespace pdj.tiny7z.Common
                 if (currentOffset + count > startOffset + windowSize)
                 {
                     int newCount = (int)((startOffset + windowSize) - currentOffset);
-                    Trace.TraceWarning($"End of substream window reached, {newCount} of {count} bytes written.");
+                    //Trace.TraceWarning($"End of substream window reached, {newCount} of {count} bytes written.");
 
                     count = newCount;
                 }
@@ -97,8 +90,8 @@ namespace pdj.tiny7z.Common
                     internalStream.WriteByte(value);
                     ++currentOffset;
                 }
-                else
-                    Trace.TraceWarning("End of substream window reached, one byte was not written.");
+                //else
+                    //Trace.TraceWarning("End of substream window reached, one byte was not written.");
             }
         }
 

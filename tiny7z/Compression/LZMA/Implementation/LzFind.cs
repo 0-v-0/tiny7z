@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ManagedLzma.LZMA.Master
 {
-    partial class LZMA
+	partial class LZMA
     {
         internal class CMatchFinder
         {
@@ -61,7 +58,7 @@ namespace ManagedLzma.LZMA.Master
 
             internal CMatchFinder()
             {
-                TR("MatchFinder_Construct", 0);
+                //TR("MatchFinder_Construct", 0);
 
                 mBufferBase = null;
                 mDirectInput = false;
@@ -433,7 +430,7 @@ namespace ManagedLzma.LZMA.Master
                     uint delta = pos - curMatch;
                     if (cutValue-- == 0 || delta >= _cyclicBufferSize)
                     {
-                        ptr0[0] = ptr1[0] = CMatchFinder.kEmptyHashValue;
+                        ptr0[0] = ptr1[0] = kEmptyHashValue;
                         return distances;
                     }
 
@@ -493,7 +490,7 @@ namespace ManagedLzma.LZMA.Master
                     uint delta = pos - curMatch;
                     if (cutValue-- == 0 || delta >= _cyclicBufferSize)
                     {
-                        ptr0[0] = ptr1[0] = CMatchFinder.kEmptyHashValue;
+                        ptr0[0] = ptr1[0] = kEmptyHashValue;
                         return;
                     }
 
@@ -736,8 +733,8 @@ namespace ManagedLzma.LZMA.Master
 
                 if (delta2 < mCyclicBufferSize && cur[-delta2] == cur[0])
                 {
-                    TR("Hc4_MatchFinder_GetMatches:a1", maxLen);
-                    TR("Hc4_MatchFinder_GetMatches:a2", delta2);
+                    //TR("Hc4_MatchFinder_GetMatches:a1", maxLen);
+                    //TR("Hc4_MatchFinder_GetMatches:a2", delta2);
                     distances[0] = maxLen = 2;
                     distances[1] = delta2 - 1;
                     offset = 2;
@@ -745,8 +742,8 @@ namespace ManagedLzma.LZMA.Master
 
                 if (delta2 != delta3 && delta3 < mCyclicBufferSize && cur[-delta3] == cur[0])
                 {
-                    TR("Hc4_MatchFinder_GetMatches:b1", offset);
-                    TR("Hc4_MatchFinder_GetMatches:b2", delta3);
+                    //TR("Hc4_MatchFinder_GetMatches:b1", offset);
+                    //TR("Hc4_MatchFinder_GetMatches:b2", delta3);
                     maxLen = 3;
                     distances[offset + 1] = delta3 - 1;
                     offset += 2;
@@ -758,14 +755,14 @@ namespace ManagedLzma.LZMA.Master
                     while (maxLen != lenLimit && cur[maxLen - delta2] == cur[maxLen])
                         maxLen++;
 
-                    TR("Hc4_MatchFinder_GetMatches:c1", offset);
-                    TR("Hc4_MatchFinder_GetMatches:c2", maxLen);
+                    //TR("Hc4_MatchFinder_GetMatches:c1", offset);
+                    //TR("Hc4_MatchFinder_GetMatches:c2", maxLen);
 
                     distances[offset - 2] = maxLen;
 
                     if (maxLen == lenLimit)
                     {
-                        TR("Hc4_MatchFinder_GetMatches:d", curMatch);
+                        //TR("Hc4_MatchFinder_GetMatches:d", curMatch);
                         mSon[mCyclicBufferPos] = curMatch;
                         mCyclicBufferPos++;
                         mBuffer++;
@@ -928,7 +925,7 @@ namespace ManagedLzma.LZMA.Master
         internal interface IMatchFinder
         {
             void Init(object p);
-            byte GetIndexByte(object p, Int32 index);
+            byte GetIndexByte(object p, int index);
             uint GetNumAvailableBytes(object p);
             P<byte> GetPointerToCurrentPos(object p);
             uint GetMatches(object p, P<uint> distances);
@@ -937,7 +934,7 @@ namespace ManagedLzma.LZMA.Master
 
         internal static void MatchFinder_CreateVTable(CMatchFinder p, out IMatchFinder vTable)
         {
-            TR("MatchFinder_CreateVTable", p.mNumHashBytes);
+            //TR("MatchFinder_CreateVTable", p.mNumHashBytes);
             if (!p.mBtMode)
                 vTable = new MatchFinderHc4();
             else if (p.mNumHashBytes == 2)

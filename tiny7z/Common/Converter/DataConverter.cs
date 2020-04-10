@@ -41,7 +41,7 @@ using System;
 
 #pragma warning disable 3021
 
-namespace pdj.tiny7z.Common
+namespace Tiny7z.Common
 {
 #if MONO_DATACONVERTER_PUBLIC
 	public

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace pdj.tiny7z.Archive
+namespace Tiny7z.Archive
 {
     /// <summary>
     /// Represents one file in an archive
@@ -8,10 +8,10 @@ namespace pdj.tiny7z.Archive
     public class ArchiveFile
     {
         public string Name;
-        public UInt64? Size;
-        public UInt32? CRC;
+        public ulong? Size;
+        public uint? CRC;
         public DateTime? Time;
-        public UInt32? Attributes;
+        public uint? Attributes;
         public bool IsEmpty;
         public bool IsDirectory;
         public bool IsDeleted;

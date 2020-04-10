@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace pdj.tiny7z.Common
+namespace Tiny7z.Common
 {
     /// <summary>
     /// Abstract stream class for bundling multiple streams together as one.
@@ -52,7 +52,7 @@ namespace pdj.tiny7z.Common
         #endregion Private Fields
 
         #region Public Stream Interface
-        public AbstractMultiStream(UInt64 numStreams)
+        public AbstractMultiStream(ulong numStreams)
             : base()
         {
             if (numStreams == 0)
@@ -61,7 +61,7 @@ namespace pdj.tiny7z.Common
             Sizes = new long?[numStreams];
             CRCs = new uint?[numStreams];
 
-            this.internalStream = null;
+            internalStream = null;
             this.numStreams = (long)numStreams;
             currentIndex = -1;
             currentOffset = 0;
@@ -250,7 +250,7 @@ namespace pdj.tiny7z.Common
             if (currentIndex == -1)
             {
                 currentIndex = 0;
-                this.internalStream = new CRCStream(NextStream(), false);
+                internalStream = new CRCStream(NextStream(), false);
             }
         }
 
@@ -260,7 +260,7 @@ namespace pdj.tiny7z.Common
         private bool iterateStream()
         {
             // get crc and set size if it wasn't already
-            CRCs[currentIndex] = internalStream.Result;
+            CRCs[currentIndex] = internalStream.CRC;
             if (Sizes[currentIndex] == null)
                 Sizes[currentIndex] = currentSize;
 

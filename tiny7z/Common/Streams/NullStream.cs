@@ -1,7 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
-namespace pdj.tiny7z.Common
+namespace Tiny7z.Common
 {
     /// <summary>
     /// Null stream implementation. Allows reading and writing into it as if it was an actual stream, but nothing is done with data.
@@ -25,7 +24,7 @@ namespace pdj.tiny7z.Common
         public NullStream(long length)
         {
             this.length = length;
-            this.pos = 0;
+            pos = 0;
         }
 
         private long length;

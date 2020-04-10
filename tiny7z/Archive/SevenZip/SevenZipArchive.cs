@@ -1,11 +1,11 @@
-﻿using pdj.tiny7z.Common;
+﻿using Tiny7z.Common;
 using System;
-using System.Diagnostics;
+
 using System.Linq;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace pdj.tiny7z.Archive
+namespace Tiny7z.Archive
 {
     /// <summary>
     /// Main 7zip archive class to handle reading and writing into .7z archive files.
@@ -16,7 +16,7 @@ namespace pdj.tiny7z.Archive
         /// <summary>
         /// 7zip file signature
         /// </summary>
-        internal static readonly Byte[] kSignature = new Byte[6] { (Byte)'7', (Byte)'z', 0xBC, 0xAF, 0x27, 0x1C };
+        internal static readonly byte[] kSignature = new byte[6] { (byte)'7', (byte)'z', 0xBC, 0xAF, 0x27, 0x1C };
 
         /// <summary>
         /// 7zip file archive version
@@ -25,9 +25,9 @@ namespace pdj.tiny7z.Archive
         internal struct ArchiveVersion
         {
             [MarshalAs(UnmanagedType.U1)]
-            public Byte Major;   // now = 0
+            public byte Major;   // now = 0
             [MarshalAs(UnmanagedType.U1)]
-            public Byte Minor;   // now = 2
+            public byte Minor;   // now = 2
         };
 
         /// <summary>
@@ -37,13 +37,13 @@ namespace pdj.tiny7z.Archive
         internal struct StartHeader
         {
             [MarshalAs(UnmanagedType.U8)]
-            public UInt64 NextHeaderOffset;
+            public ulong NextHeaderOffset;
 
             [MarshalAs(UnmanagedType.U8)]
-            public UInt64 NextHeaderSize;
+            public ulong NextHeaderSize;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 NextHeaderCRC;
+            public uint NextHeaderCRC;
         }
 
         /// <summary>
@@ -53,12 +53,12 @@ namespace pdj.tiny7z.Archive
         internal struct SignatureHeader
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6)]
-            public Byte[] Signature;
+            public byte[] Signature;
 
             public ArchiveVersion ArchiveVersion;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 StartHeaderCRC;
+            public uint StartHeaderCRC;
 
             public StartHeader StartHeader;
         }
@@ -88,12 +88,12 @@ namespace pdj.tiny7z.Archive
             this.fileAccess = fileAccess;
             if (fileAccess == FileAccess.Read)
             {
-                Trace.TraceInformation("Open 7zip archive for reading.");
+                //Trace.TraceInformation("Open 7zip archive for reading.");
                 open();
             }
             else if (fileAccess == FileAccess.Write)
             {
-                Trace.TraceInformation("Open 7zip archive for writing.");
+                //Trace.TraceInformation("Open 7zip archive for writing.");
                 create();
             }
             else
@@ -118,8 +118,8 @@ namespace pdj.tiny7z.Archive
         /// <returns></returns>
         public override IExtractor Extractor()
         {
-            if (this.stream == null)
-                throw new SevenZipException("SevenZipArchive object is either uninitialized or closed.");
+            //if (this.stream == null)
+                //throw new SevenZipException("SevenZipArchive object is either uninitialized or closed.");
             return new SevenZipExtractor(stream, Header);
         }
 
@@ -129,8 +129,8 @@ namespace pdj.tiny7z.Archive
         /// <returns></returns>
         public override ICompressor Compressor()
         {
-            if (this.stream == null)
-                throw new SevenZipException("SevenZipArchive object is either uninitialized or closed.");
+            //if (this.stream == null)
+                //throw new SevenZipException("SevenZipArchive object is either uninitialized or closed.");
             return new SevenZipCompressor(stream, Header);
         }
 
@@ -139,25 +139,25 @@ namespace pdj.tiny7z.Archive
         /// </summary>
         public void Close()
         {
-            this.signatureHeader = new SignatureHeader();
-            if (this.stream != null)
+            signatureHeader = new SignatureHeader();
+            if (stream != null)
             {
-                this.stream.Close();
-                this.stream.Dispose();
-                this.stream = null;
-            }
-            this.fileAccess = null;
-            this.Header = null;
-            this.IsValid = false;
+                stream.Close();
+                stream.Dispose();
+                stream = null;
+        }
+            fileAccess = null;
+            Header = null;
+            IsValid = false;
         }
 
         /// <summary>
         /// Dump debug information to console
         /// </summary>
-        public void Dump()
-        {
+        //public void Dump()
+        //{
             // TODO
-        }
+        //}
         #endregion Public Methods
 
         #region Private Constructors
@@ -184,24 +184,24 @@ namespace pdj.tiny7z.Archive
             {
                 throw new SevenZipException("File is not a valid 7zip file.");
             }
-            this.signatureHeader = sig;
+            signatureHeader = sig;
 
             // some debug info
 
-            Trace.TraceInformation("Opening 7zip file:");
-            Trace.Indent();
+            //Trace.TraceInformation("Opening 7zip file:");
+            //Trace.Indent();
 
             try
             {
-                Trace.TraceInformation($"Version: {sig.ArchiveVersion.Major}.{sig.ArchiveVersion.Minor}");
-                Trace.TraceInformation($"StartHeaderCRC: {sig.StartHeaderCRC.ToString("X8")}");
-                Trace.TraceInformation($"NextHeaderOffset: {sig.StartHeader.NextHeaderOffset}");
-                Trace.TraceInformation($"NextHeaderCRC: {sig.StartHeader.NextHeaderCRC.ToString("X8")}");
-                Trace.TraceInformation($"NextHeaderSize: {sig.StartHeader.NextHeaderSize}");
-                Trace.TraceInformation($"All headers: " + (sig.StartHeader.NextHeaderSize + (uint)Marshal.SizeOf(sig)) + " bytes");
+                //Trace.TraceInformation($"Version: {sig.ArchiveVersion.Major}.{sig.ArchiveVersion.Minor}");
+                //Trace.TraceInformation($"StartHeaderCRC: {sig.StartHeaderCRC.ToString("X8")}");
+                //Trace.TraceInformation($"NextHeaderOffset: {sig.StartHeader.NextHeaderOffset}");
+                //Trace.TraceInformation($"NextHeaderCRC: {sig.StartHeader.NextHeaderCRC.ToString("X8")}");
+                //Trace.TraceInformation($"NextHeaderSize: {sig.StartHeader.NextHeaderSize}");
+                //Trace.TraceInformation($"All headers: " + (sig.StartHeader.NextHeaderSize + (uint)Marshal.SizeOf(sig)) + " bytes");
 
                 {
-                    uint crc32 = new CRC().Calculate(sig.StartHeader.GetByteArray()).Result;
+                    uint crc32 = CRC.Calculate(sig.StartHeader.GetByteArray());
                     if (crc32 != sig.StartHeaderCRC)
                     {
                         throw new SevenZipException("StartHeaderCRC mismatch: " + crc32.ToString("X8"));
@@ -218,7 +218,7 @@ namespace pdj.tiny7z.Archive
                 }
 
                 {
-                    uint crc32 = new CRC().Calculate(buffer).Result;
+                    uint crc32 = CRC.Calculate(buffer);
                     if (crc32 != sig.StartHeader.NextHeaderCRC)
                     {
                         throw new SevenZipException("StartHeader.NextHeaderCRC mismatch: " + crc32.ToString("X8"));
@@ -227,7 +227,7 @@ namespace pdj.tiny7z.Archive
 
                 // initiate header parsing
 
-                Trace.TraceInformation("Parsing 7zip file header:");
+                //Trace.TraceInformation("Parsing 7zip file header");
                 Header = new SevenZipHeader(new MemoryStream(buffer));
                 Header.Parse();
 
@@ -235,13 +235,13 @@ namespace pdj.tiny7z.Archive
 
                 if (Header.RawHeader == null && Header.EncodedHeader != null)
                 {
-                    Trace.TraceInformation("Encoded header detected, decompressing.");
+                    //Trace.TraceInformation("Encoded header detected, decompressing.");
                     Stream newHeaderStream = new MemoryStream();
                     (new SevenZipStreamsExtractor(stream, Header.EncodedHeader)).Extract(0, newHeaderStream, null);
 
-                    Trace.TraceInformation("Parsing decompressed header:");
+                    //Trace.TraceInformation("Parsing decompressed header:");
                     newHeaderStream.Position = 0;
-                    SevenZipHeader
+                    var
                         newHeader = new SevenZipHeader(newHeaderStream);
                         newHeader.Parse();
                     Header = newHeader;
@@ -251,8 +251,8 @@ namespace pdj.tiny7z.Archive
             }
             finally
             {
-                Trace.Unindent();
-                Trace.TraceInformation("Done parsing 7zip file header.");
+                //Trace.Unindent();
+                //Trace.TraceInformation("Done parsing 7zip file header.");
             }
         }
 
@@ -261,7 +261,7 @@ namespace pdj.tiny7z.Archive
         /// </summary>
         private void create()
         {
-            this.signatureHeader = new SignatureHeader()
+            signatureHeader = new SignatureHeader()
             {
                 Signature = kSignature.ToArray(),
                 ArchiveVersion = new ArchiveVersion()
@@ -270,9 +270,9 @@ namespace pdj.tiny7z.Archive
                     Minor = 2,
                 },
             };
-            stream.Write(this.signatureHeader.GetByteArray(), 0, Marshal.SizeOf(this.signatureHeader));
+            stream.Write(signatureHeader.GetByteArray(), 0, Marshal.SizeOf(signatureHeader));
 
-            this.Header = new SevenZipHeader(null, true);
+            Header = new SevenZipHeader(null, true);
         }
         #endregion Private Methods
     }

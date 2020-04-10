@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace pdj.tiny7z.Common
+namespace Tiny7z.Common
 {
     public static class Extensions
     {
@@ -13,7 +13,7 @@ namespace pdj.tiny7z.Common
             int structSize = Marshal.SizeOf(typeof(T));
             byte[] buffer = new byte[structSize];
 
-            GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
             IntPtr pBuffer = handle.AddrOfPinnedObject();
             Marshal.StructureToPtr(structObj, pBuffer, false);
             handle.Free();
@@ -30,8 +30,8 @@ namespace pdj.tiny7z.Common
             if (byteArray.Length < structSize)
                 throw new ArgumentOutOfRangeException();
 
-            GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
-            T structObj = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
+            var handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
+            var structObj = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
             handle.Free();
 
             return structObj;

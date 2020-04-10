@@ -1,4 +1,4 @@
-﻿namespace pdj.tiny7z.Compression
+﻿namespace Tiny7z.Compression
 {
     /// <summary>
     /// Password-protected archive provider interface

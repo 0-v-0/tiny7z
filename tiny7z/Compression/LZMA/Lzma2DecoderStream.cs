@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using ManagedLzma.LZMA;
 using LZMA = ManagedLzma.LZMA.Master.LZMA;
 
-namespace pdj.tiny7z.Compression
+namespace Tiny7z.Compression
 {
-    public class Lzma2DecoderStream : Stream
+	public class Lzma2DecoderStream : Stream
     {
         #region Stream Methods - Unsupported
 

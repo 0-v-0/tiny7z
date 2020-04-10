@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace pdj.tiny7z.Compression
+namespace Tiny7z.Compression
 {
     public static class Registry
     {
@@ -28,7 +28,7 @@ namespace pdj.tiny7z.Compression
         public static Stream GetDecoderStream(
             Method method,
             Stream[] inStreams,
-            Byte[] properties,
+			byte[] properties,
             IPasswordProvider password,
             long limit)
         {

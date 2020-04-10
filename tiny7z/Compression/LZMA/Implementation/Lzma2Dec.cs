@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ManagedLzma.LZMA.Master
+﻿namespace ManagedLzma.LZMA.Master
 {
-    partial class LZMA
+	partial class LZMA
     {
         public sealed class CLzma2Dec
         {
@@ -103,10 +98,10 @@ namespace ManagedLzma.LZMA.Master
                 {
                     case Lzma2State.Control:
                         mControl = b;
-                        TR("Lzma2Dec_UpdateState:1", checked((int)mDecoder.mDicPos));
-                        TR("Lzma2Dec_UpdateState:2", b);
-                        DebugPrint("\n {0:X4} ", mDecoder.mDicPos);
-                        DebugPrint(" {0:X2}", b);
+                        //TR("Lzma2Dec_UpdateState:1", checked((int)mDecoder.mDicPos));
+                        //TR("Lzma2Dec_UpdateState:2", b);
+                        //DebugPrint("\n {0:X4} ", mDecoder.mDicPos);
+                        //DebugPrint(" {0:X2}", b);
 
                         if (mControl == 0)
                             return Lzma2State.Finished;
@@ -133,8 +128,8 @@ namespace ManagedLzma.LZMA.Master
                         mUnpackSize |= (uint)b;
                         mUnpackSize++;
 
-                        TR("Lzma2Dec_UpdateState:3", mUnpackSize);
-                        DebugPrint(" {0:00000000}", mUnpackSize);
+                        //TR("Lzma2Dec_UpdateState:3", mUnpackSize);
+                        //DebugPrint(" {0:00000000}", mUnpackSize);
 
                         if (IsUncompressedState())
                             return Lzma2State.Data;
@@ -149,8 +144,8 @@ namespace ManagedLzma.LZMA.Master
                         mPackSize |= (uint)b;
                         mPackSize++;
 
-                        TR("Lzma2Dec_UpdateState:4", mPackSize);
-                        DebugPrint(" {0:00000000}", mPackSize);
+                        //TR("Lzma2Dec_UpdateState:4", mPackSize);
+                        //DebugPrint(" {0:00000000}", mPackSize);
 
                         if (IsThereProp(GetLzmaMode()))
                             return Lzma2State.Prop;
@@ -456,7 +451,7 @@ namespace ManagedLzma.LZMA.Master
                 srcLen = 0;
                 status = ELzmaStatus.LZMA_STATUS_NOT_SPECIFIED;
 
-                CLzma2Dec p = new CLzma2Dec();
+                var p = new CLzma2Dec();
                 p.Lzma2Dec_Construct();
                 SRes res;
                 if ((res = p.Lzma2Dec_AllocateProbs(prop, alloc)) != SZ_OK)

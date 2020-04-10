@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace pdj.tiny7z.Compression
+namespace Tiny7z.Compression
 {
-    class Bcj2DecoderStream : DecoderStream
+	class Bcj2DecoderStream : DecoderStream
     {
         const int kNumTopBits = 24;
         const uint kTopValue = (1 << kNumTopBits);

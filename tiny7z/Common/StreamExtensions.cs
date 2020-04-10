@@ -4,14 +4,14 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Linq;
 
-namespace pdj.tiny7z.Common
+namespace Tiny7z.Common
 {
     public static class StreamExtensions
     {
         /// <summary>
         /// Reads a bitmask only if the AllAreDefined byte is == 0
         /// </summary>
-        public static UInt64 ReadOptionalBoolVector(this Stream stream, UInt64 length, out bool[] vector)
+        public static ulong ReadOptionalBoolVector(this Stream stream, ulong length, out bool[] vector)
         {
             if (stream.ReadByteThrow() == 0)
             {
@@ -27,7 +27,7 @@ namespace pdj.tiny7z.Common
         /// <summary>
         /// Writes a bitmask only if there's any unset element.
         /// </summary>
-        public static UInt64 WriteOptionalBoolVector(this Stream stream, bool[] vector)
+        public static ulong WriteOptionalBoolVector(this Stream stream, bool[] vector)
         {
             for (long i = 0; i < vector.LongLength; ++i)
             {
@@ -44,12 +44,12 @@ namespace pdj.tiny7z.Common
         /// <summary>
         /// Reads a bitmask from stream and converts to a boolean vector
         /// </summary>
-        public static UInt64 ReadBoolVector(this Stream stream, UInt64 length, out bool[] vector)
+        public static ulong ReadBoolVector(this Stream stream, ulong length, out bool[] vector)
         {
             vector = new bool[length];
-            UInt64 numDefined = 0;
-            Byte mask = 0;
-            Byte b = 0;
+			ulong numDefined = 0;
+			byte mask = 0;
+			byte b = 0;
             for (ulong i = 0; i < length; ++i)
             {
                 if (mask == 0)
@@ -67,11 +67,11 @@ namespace pdj.tiny7z.Common
         /// <summary>
         /// Writes a boolean vector in stream in bitmask form
         /// </summary>
-        public static UInt64 WriteBoolVector(this Stream stream, bool[] vector)
+        public static ulong WriteBoolVector(this Stream stream, bool[] vector)
         {
-            Byte mask = 0x80;
-            Byte b = 0;
-            UInt64 length = 0;
+			byte mask = 0x80;
+			byte b = 0;
+			ulong length = 0;
             for (long i = 0; i < vector.LongLength; ++i)
             {
                 if (vector[i])
@@ -96,9 +96,9 @@ namespace pdj.tiny7z.Common
         /// <summary>
         /// Calculates size of a boolean vector in bytes
         /// </summary>
-        public static UInt64 BoolVectorSize(bool[] vector)
+        public static ulong BoolVectorSize(bool[] vector)
         {
-            return ((UInt64)vector.LongLength + 7) / 8;
+            return ((ulong)vector.LongLength + 7) / 8;
         }
 
         /// <summary>
@@ -125,22 +125,22 @@ namespace pdj.tiny7z.Common
         /// <summary>
         /// Read one encoded 64-bits integer from stream
         /// </summary>
-        public static UInt64 ReadDecodedUInt64(this Stream stream)
+        public static ulong ReadDecodedUInt64(this Stream stream)
         {
-            Byte firstByte = (Byte)stream.ReadByteThrow();
-            Byte mask = 0x80;
-            UInt64 value = 0;
+			byte firstByte = (byte)stream.ReadByteThrow();
+			byte mask = 0x80;
+			ulong value = 0;
 
             for (int i = 0; i < 8; ++i)
             {
                 if ((firstByte & mask) == 0)
                 {
-                    UInt64 highPart = firstByte & (mask - 1u);
+					ulong highPart = firstByte & (mask - 1u);
                     value += highPart << (8 * i);
                     return value;
                 }
 
-                value |= (UInt64)stream.ReadByteThrow() << (8 * i);
+                value |= (ulong)stream.ReadByteThrow() << (8 * i);
                 mask >>= 1;
             }
 
@@ -150,21 +150,21 @@ namespace pdj.tiny7z.Common
         /// <summary>
         /// Write one encoded 64-bits integer to stream
         /// </summary>
-        public static int WriteEncodedUInt64(this Stream stream, UInt64 y)
+        public static int WriteEncodedUInt64(this Stream stream, ulong y)
         {
-            List<Byte> data = new List<Byte>();
+            var data = new List<byte>();
 
-            Byte mask = 0x80;
+			byte mask = 0x80;
             data.Add(0xFF);
             for (int i = 0; i < 8; ++i)
             {
                 if (y < mask)
                 {
-                    mask = (Byte)((0xFF ^ mask) ^ (mask - 1u));
-                    data[0] = (Byte)(y | mask);
+                    mask = (byte)((0xFF ^ mask) ^ (mask - 1u));
+                    data[0] = (byte)(y | mask);
                     break;
                 }
-                data.Add((Byte)(y & 0xFF));
+                data.Add((byte)(y & 0xFF));
                 y >>= 8;
                 mask >>= 1;
             }
@@ -175,11 +175,11 @@ namespace pdj.tiny7z.Common
         /// <summary>
         /// Calculates one encoded 64-bits integer's actual size in bytes
         /// </summary>
-        public static int EncodedUInt64Size(UInt64 y)
+        public static int EncodedUInt64Size(ulong y)
         {
             int i;
             for (i = 1; i < 9; i++)
-                if (y < (((UInt64)1 << (i * 7))))
+                if (y < (((ulong)1 << (i * 7))))
                     break;
             return i;
         }
@@ -187,20 +187,20 @@ namespace pdj.tiny7z.Common
         /// <summary>
         /// Extension to read a byte from a stream, but throw instead of returning -1 if end of stream is reached.
         /// </summary>
-        public static Byte ReadByteThrow(this Stream stream)
+        public static byte ReadByteThrow(this Stream stream)
         {
             int y = stream.ReadByte();
             if (y == -1)
                 throw new EndOfStreamException();
-            return (Byte)y;
+            return (byte)y;
         }
 
         /// <summary>
         /// Extension to read an array of bytes from a stream, but throw if end of stream is reached.
         /// </summary>
-        public static Byte[] ReadThrow(this Stream stream, UInt64 size)
+        public static byte[] ReadThrow(this Stream stream, ulong size)
         {
-            Byte[] buffer = new Byte[size];
+			byte[] buffer = new byte[size];
             if (stream.Read(buffer, 0, (int)size) < (int)size)
                 throw new EndOfStreamException();
             return buffer;

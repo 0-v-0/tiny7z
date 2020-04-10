@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ManagedLzma.LZMA.Master
 {
-    partial class LZMA
+	partial class LZMA
     {
         public const int LZMA_PROPS_SIZE = 5;
 
@@ -89,19 +86,19 @@ namespace ManagedLzma.LZMA.Master
             {
                 // was LzmaEncProps_Init
 
-                this.mLevel = 5;
-                this.mDictSize = 0;
-                this.mMC = 0;
-                this.mReduceSize = ~0u;
-                this.mLC = -1;
-                this.mLP = -1;
-                this.mPB = -1;
-                this.mAlgo = -1;
-                this.mFB = -1;
-                this.mBtMode = -1;
-                this.mNumHashBytes = -1;
-                this.mNumThreads = -1;
-                this.mWriteEndMark = 0;
+                mLevel = 5;
+                mDictSize = 0;
+                mMC = 0;
+                mReduceSize = ~0u;
+                mLC = -1;
+                mLP = -1;
+                mPB = -1;
+                mAlgo = -1;
+                mFB = -1;
+                mBtMode = -1;
+                mNumHashBytes = -1;
+                mNumThreads = -1;
+                mWriteEndMark = 0;
             }
 
             #endregion
@@ -110,24 +107,28 @@ namespace ManagedLzma.LZMA.Master
 
             public CLzmaEncProps(CLzmaEncProps other)
             {
-                this.mLevel = other.mLevel;
-                this.mDictSize = other.mDictSize;
-                this.mReduceSize = other.mReduceSize;
-                this.mLC = other.mLC;
-                this.mLP = other.mLP;
-                this.mPB = other.mPB;
-                this.mAlgo = other.mAlgo;
-                this.mFB = other.mFB;
-                this.mBtMode = other.mBtMode;
-                this.mNumHashBytes = other.mNumHashBytes;
-                this.mMC = other.mMC;
-                this.mWriteEndMark = other.mWriteEndMark;
-                this.mNumThreads = other.mNumThreads;
+                mLevel = other.mLevel;
+                mDictSize = other.mDictSize;
+                mReduceSize = other.mReduceSize;
+                mLC = other.mLC;
+                mLP = other.mLP;
+                mPB = other.mPB;
+                mAlgo = other.mAlgo;
+                mFB = other.mFB;
+                mBtMode = other.mBtMode;
+                mNumHashBytes = other.mNumHashBytes;
+                mMC = other.mMC;
+                mWriteEndMark = other.mWriteEndMark;
+                mNumThreads = other.mNumThreads;
             }
 
             public static CLzmaEncProps LzmaEncProps_Init()
             {
-                return new CLzmaEncProps();
+                return new CLzmaEncProps
+				{
+					mFB = 256
+				}
+					;
             }
 
             public void LzmaEncProps_Normalize()
@@ -195,7 +196,7 @@ namespace ManagedLzma.LZMA.Master
 
             internal uint LzmaEncProps_GetDictSize()
             {
-                CLzmaEncProps props = new CLzmaEncProps(this);
+                var props = new CLzmaEncProps(this);
                 props.LzmaEncProps_Normalize();
                 return props.mDictSize;
             }
@@ -1017,20 +1018,20 @@ namespace ManagedLzma.LZMA.Master
 
             public SRes LzmaEnc_SetProps(CLzmaEncProps props2)
             {
-                TR("LzmaEnc_SetProps:level", props2.mLevel);
-                TR("LzmaEnc_SetProps:dictSize", props2.mDictSize);
-                TR("LzmaEnc_SetProps:lc", props2.mLC);
-                TR("LzmaEnc_SetProps:lp", props2.mLP);
-                TR("LzmaEnc_SetProps:pb", props2.mPB);
-                TR("LzmaEnc_SetProps:algo", props2.mAlgo);
-                TR("LzmaEnc_SetProps:fb", props2.mFB);
-                TR("LzmaEnc_SetProps:btMode", props2.mBtMode);
-                TR("LzmaEnc_SetProps:numHashBytes", props2.mNumHashBytes);
-                TR("LzmaEnc_SetProps:mc", props2.mMC);
-                TR("LzmaEnc_SetProps:writeEndMark", props2.mWriteEndMark);
-                TR("LzmaEnc_SetProps:numThreads", props2.mNumThreads);
+                //TR("LzmaEnc_SetProps:level", props2.mLevel);
+                //TR("LzmaEnc_SetProps:dictSize", props2.mDictSize);
+                //TR("LzmaEnc_SetProps:lc", props2.mLC);
+                //TR("LzmaEnc_SetProps:lp", props2.mLP);
+                //TR("LzmaEnc_SetProps:pb", props2.mPB);
+                //TR("LzmaEnc_SetProps:algo", props2.mAlgo);
+                //TR("LzmaEnc_SetProps:fb", props2.mFB);
+                //TR("LzmaEnc_SetProps:btMode", props2.mBtMode);
+                //TR("LzmaEnc_SetProps:numHashBytes", props2.mNumHashBytes);
+                //TR("LzmaEnc_SetProps:mc", props2.mMC);
+                //TR("LzmaEnc_SetProps:writeEndMark", props2.mWriteEndMark);
+                //TR("LzmaEnc_SetProps:numThreads", props2.mNumThreads);
 
-                CLzmaEncProps props = new CLzmaEncProps(props2);
+                var props = new CLzmaEncProps(props2);
                 props.LzmaEncProps_Normalize();
 
                 if (props.mLC > LZMA_LC_MAX
@@ -1115,7 +1116,7 @@ namespace ManagedLzma.LZMA.Master
 
             public SRes LzmaEnc_MemEncode(P<byte> dest, ref long destLen, P<byte> src, long srcLen, bool writeEndMark, ICompressProgress progress, ISzAlloc alloc, ISzAlloc allocBig)
             {
-                CSeqOutStreamBuf outStream = new CSeqOutStreamBuf();
+                var outStream = new CSeqOutStreamBuf();
 
                 LzmaEnc_SetInputBuf(src, srcLen);
 
@@ -1160,7 +1161,7 @@ namespace ManagedLzma.LZMA.Master
 
             internal void LzmaEnc_SaveState()
             {
-                TR("LzmaEnc_SaveState", 0);
+                //TR("LzmaEnc_SaveState", 0);
 
                 mSaveState.mLenEnc = new CLenPriceEnc(mLenEnc);
                 mSaveState.mRepLenEnc = new CLenPriceEnc(mRepLenEnc);
@@ -1187,7 +1188,7 @@ namespace ManagedLzma.LZMA.Master
 
             internal void LzmaEnc_RestoreState()
             {
-                TR("LzmaEnc_RestoreState", 0);
+                //TR("LzmaEnc_RestoreState", 0);
 
                 mLenEnc = new CLenPriceEnc(mSaveState.mLenEnc);
                 mRepLenEnc = new CLenPriceEnc(mSaveState.mRepLenEnc);
@@ -1214,7 +1215,7 @@ namespace ManagedLzma.LZMA.Master
 
             private uint GetOptimum(uint position, out uint backRes)
             {
-                OptimumReps reps = new OptimumReps();
+                var reps = new OptimumReps();
                 P<uint> matches;
                 uint numAvail;
                 uint lenEnd;
@@ -1253,12 +1254,12 @@ namespace ManagedLzma.LZMA.Master
                         numAvail = LZMA_MATCH_LEN_MAX;
 
                     P<byte> data = mMatchFinder.GetPointerToCurrentPos(mMatchFinderObj) - 1;
-                    OptimumReps repLens = new OptimumReps();
+                    var repLens = new OptimumReps();
                     uint repMaxIndex = 0;
                     for (uint i = 0; i < LZMA_NUM_REPS; i++)
                     {
                         reps[i] = mReps[i];
-                        TR("GetOptimum:reps[i]", reps[i]);
+                        //TR("GetOptimum:reps[i]", reps[i]);
                         P<byte> data2 = data - (reps[i] + 1);
                         if (data[0] != data2[0] || data[1] != data2[1])
                         {
@@ -1415,12 +1416,12 @@ namespace ManagedLzma.LZMA.Master
                         Print("\nprice[{0:X4}] = {1}", position - cur + j, mOpt[j].mPrice);
                 }
 #endif
-                //TR("GetOptimum::pos", position);
+                ////TR("GetOptimum::pos", position);
                 //if(position >= 0)
                 //{
-                //    TR("GetOptimum::cur", cur);
+                //    //TR("GetOptimum::cur", cur);
                 //    for(uint j = cur; j <= lenEnd; j++)
-                //        TR("GetOptimum::price[i]", mOpt[j].price);
+                //        //TR("GetOptimum::price[i]", mOpt[j].price);
                 //}
 
                 for (;;)
@@ -1794,7 +1795,7 @@ namespace ManagedLzma.LZMA.Master
                 }
                 else
                 {
-                    TR("GetOptimumFast:longestMatchLength", mLongestMatchLength);
+                    //TR("GetOptimumFast:longestMatchLength", mLongestMatchLength);
                     mainLen = mLongestMatchLength;
                     numPairs = mNumPairs;
                 }
@@ -1812,7 +1813,7 @@ namespace ManagedLzma.LZMA.Master
                 for (uint i = 0; i < LZMA_NUM_REPS; i++)
                 {
                     P<byte> data2 = data - (mReps[i] + 1);
-                    TR("GetOptimumFast:reps[i]:a", mReps[i]);
+                    //TR("GetOptimumFast:reps[i]:a", mReps[i]);
                     if (data[0] != data2[0] || data[1] != data2[1])
                         continue;
 
@@ -1887,7 +1888,7 @@ namespace ManagedLzma.LZMA.Master
                 data = mMatchFinder.GetPointerToCurrentPos(mMatchFinderObj) - 1;
                 for (uint i = 0; i < LZMA_NUM_REPS; i++)
                 {
-                    TR("GetOptimumFast:reps[i]:b", mReps[i]);
+                    //TR("GetOptimumFast:reps[i]:b", mReps[i]);
                     P<byte> data2 = data - (mReps[i] + 1);
                     if (data[0] != data2[0] || data[1] != data2[1])
                         continue;
@@ -1909,7 +1910,7 @@ namespace ManagedLzma.LZMA.Master
 
             private void WriteEndMarker(uint posState)
             {
-                TR("WriteEndMarker", posState);
+                //TR("WriteEndMarker", posState);
                 mRC.RangeEnc_EncodeBit(ref mIsMatch[mState][posState], 1);
                 mRC.RangeEnc_EncodeBit(ref mIsRep[mState], 0);
                 mState = kMatchNextStates[mState];
@@ -1939,7 +1940,7 @@ namespace ManagedLzma.LZMA.Master
 
             private SRes Flush(uint nowPos)
             {
-                TR("Flush", nowPos);
+                //TR("Flush", nowPos);
 
                 /* ReleaseMFStream(); */
                 mFinished = true;
@@ -2023,9 +2024,9 @@ namespace ManagedLzma.LZMA.Master
 
             internal SRes LzmaEnc_CodeOneBlock(bool useLimits, uint maxPackSize, uint maxUnpackSize)
             {
-                TR("CodeOneBlock:useLimits", useLimits ? 1 : 0);
-                TR("CodeOneBlock:maxPackSize", maxPackSize);
-                TR("CodeOneBlock:maxUnpackSize", maxUnpackSize);
+                //TR("CodeOneBlock:useLimits", useLimits ? 1 : 0);
+                //TR("CodeOneBlock:maxPackSize", maxPackSize);
+                //TR("CodeOneBlock:maxUnpackSize", maxUnpackSize);
 
                 if (mNeedInit)
                 {
@@ -2033,7 +2034,7 @@ namespace ManagedLzma.LZMA.Master
                     mNeedInit = false;
                 }
 
-                TR("CodeOneBlock:finished", mFinished ? 1 : 0);
+                //TR("CodeOneBlock:finished", mFinished ? 1 : 0);
                 if (mFinished)
                     return mResult;
 
@@ -2048,7 +2049,7 @@ namespace ManagedLzma.LZMA.Master
                 {
                     if (mMatchFinder.GetNumAvailableBytes(mMatchFinderObj) == 0)
                     {
-                        TRS("CodeOneBlock", "empty");
+                        //TRS("CodeOneBlock", "empty");
                         return Flush(nowPos32);
                     }
                     uint numPairs;
@@ -2071,9 +2072,9 @@ namespace ManagedLzma.LZMA.Master
                         else
                             len = GetOptimum(nowPos32, out pos);
 
-                        TR("CodeOneBlock:nowPos32", nowPos32);
-                        TR("CodeOneBlock:len", len);
-                        TR("CodeOneBlock:pos", pos);
+                        //TR("CodeOneBlock:nowPos32", nowPos32);
+                        //TR("CodeOneBlock:len", len);
+                        //TR("CodeOneBlock:pos", pos);
 
 #if SHOW_STAT2
                         Print("\n pos = {0:X4},   len = {1}   pos = {2}", nowPos32, len, pos);
@@ -2108,8 +2109,8 @@ namespace ManagedLzma.LZMA.Master
                                 else
                                 {
                                     uint distance = mReps[pos];
-                                    TR("CodeOneBlock:push-rep-0", pos);
-                                    TR("CodeOneBlock:push-rep-1", distance);
+                                    //TR("CodeOneBlock:push-rep-0", pos);
+                                    //TR("CodeOneBlock:push-rep-1", distance);
 
                                     mRC.RangeEnc_EncodeBit(ref mIsRepG0[mState], 1);
 
@@ -2164,7 +2165,7 @@ namespace ManagedLzma.LZMA.Master
                                         mAlignPriceCount++;
                                     }
                                 }
-                                TR("CodeOneBlock:push-rep-2", pos);
+                                //TR("CodeOneBlock:push-rep-2", pos);
                                 mReps._3 = mReps._2;
                                 mReps._2 = mReps._1;
                                 mReps._1 = mReps._0;
@@ -2199,9 +2200,9 @@ namespace ManagedLzma.LZMA.Master
                             else if (processed >= (1 << 15))
                             {
                                 mNowPos64 += nowPos32 - startPos32;
-                                TRS("CodeOneBlock", "chunk");
-                                TR("CodeOneBlock:start", startPos32);
-                                TR("CodeOneBlock:now", nowPos32);
+                                //TRS("CodeOneBlock", "chunk");
+                                //TR("CodeOneBlock:start", startPos32);
+                                //TR("CodeOneBlock:now", nowPos32);
                                 return CheckErrors();
                             }
                         }
@@ -2209,7 +2210,7 @@ namespace ManagedLzma.LZMA.Master
                 }
 
                 mNowPos64 += nowPos32 - startPos32;
-                TRS("CodeOneBlock", "done");
+                //TRS("CodeOneBlock", "done");
                 return Flush(nowPos32);
             }
 
@@ -2270,7 +2271,7 @@ namespace ManagedLzma.LZMA.Master
 
             internal void LzmaEnc_Init()
             {
-                TR("LzmaEnc_Init", 0);
+                //TR("LzmaEnc_Init", 0);
 
                 mState = 0;
                 mReps = new OptimumReps();
@@ -2407,7 +2408,7 @@ namespace ManagedLzma.LZMA.Master
 
             internal SRes LzmaEnc_CodeOneMemBlock(bool reInit, P<byte> dest, ref long destLen, uint desiredPackSize, ref uint unpackSize)
             {
-                CSeqOutStreamBuf outStream = new CSeqOutStreamBuf();
+                var outStream = new CSeqOutStreamBuf();
 
                 outStream.mData = dest;
                 outStream.mRem = destLen;
@@ -2465,7 +2466,7 @@ namespace ManagedLzma.LZMA.Master
                 ttt += (int)num;
                 Print("\n MovePos {0}", num);
 #endif
-                TR("MovePos", num);
+                //TR("MovePos", num);
                 if (num != 0)
                 {
                     mAdditionalOffset += num;
@@ -2488,9 +2489,9 @@ namespace ManagedLzma.LZMA.Master
 #endif
 
                 {
-                    TR("ReadMatchDistances:matches", numPairs);
-                    for (uint i = 0; i < numPairs; i++)
-                        TR("ReadMatchDistances:match[i]", mMatches[i]);
+                    //TR("ReadMatchDistances:matches", numPairs);
+                    //for (uint i = 0; i < numPairs; i++)
+                        //TR("ReadMatchDistances:match[i]", mMatches[i]);
                 }
 
                 uint lenRes = 0;
@@ -2514,7 +2515,7 @@ namespace ManagedLzma.LZMA.Master
 
                 mAdditionalOffset++;
                 numDistancePairsRes = numPairs;
-                TR("ReadMatchDistances:lenRes", lenRes);
+                //TR("ReadMatchDistances:lenRes", lenRes);
                 return lenRes;
             }
 

@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.IO.Pipes;
-using System.Threading;
-using System.Globalization;
-using D = System.Diagnostics;
 
 namespace ManagedLzma.LZMA
 {
-    namespace Master
-    {
-        partial class LZMA
+	namespace Master
+	{
+		partial class LZMA
         {
-            private static void TR(string str, int arg)
+            /*private static void TR(string str, int arg)
             {
 #if !DISABLE_TRACE
                 Trace.Match(str, arg);
@@ -33,7 +25,7 @@ namespace ManagedLzma.LZMA
 #if !DISABLE_TRACE
                 Trace.Match(str1, str2);
 #endif
-            }
+            }*/
 
             private static SRes TSZ(string kind)
             {
@@ -193,13 +185,13 @@ namespace ManagedLzma.LZMA
                             var state = thread.ThreadState;
                             if (state == ThreadState.WaitSleepJoin || state == ThreadState.Running)
                                 thread.Abort();
-                            else
+                            /*else
                             {
                                 if (System.Diagnostics.Debugger.IsAttached)
                                     System.Diagnostics.Debugger.Break();
                                 else
                                     System.Diagnostics.Debugger.Launch();
-                            }
+                            }*/
                         }
 
                         Monitor.Wait(mSync);

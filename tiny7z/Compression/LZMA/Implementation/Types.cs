@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ManagedLzma.LZMA.Master
 {
-    partial class LZMA
+	partial class LZMA
     {
         public struct SRes
         {
@@ -86,7 +84,7 @@ namespace ManagedLzma.LZMA.Master
             {
                 if (size <= 0)
                 {
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     return -1;
                 }
 
@@ -151,7 +149,7 @@ namespace ManagedLzma.LZMA.Master
                     }
                 }
 
-                System.Diagnostics.Debug.WriteLine("Alloc byte size=" + size);
+                //System.Diagnostics.Debug.WriteLine("Alloc byte size=" + size);
                 return new byte[size];
             }
 
@@ -168,7 +166,7 @@ namespace ManagedLzma.LZMA.Master
                     }
                 }
 
-                System.Diagnostics.Debug.WriteLine("Alloc ushort size=" + size);
+                //System.Diagnostics.Debug.WriteLine("Alloc ushort size=" + size);
                 return new ushort[size];
             }
 
@@ -185,7 +183,7 @@ namespace ManagedLzma.LZMA.Master
                     }
                 }
 
-                System.Diagnostics.Debug.WriteLine("Alloc uint size=" + size);
+                //System.Diagnostics.Debug.WriteLine("Alloc uint size=" + size);
                 return new uint[size];
             }
 

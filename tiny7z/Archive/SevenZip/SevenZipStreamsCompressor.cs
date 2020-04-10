@@ -1,20 +1,20 @@
-﻿using pdj.tiny7z.Common;
+﻿using Tiny7z.Common;
 using ManagedLzma.LZMA;
 using ManagedLzma.LZMA.Master;
 using System;
 using System.IO;
 using System.Linq;
 
-namespace pdj.tiny7z.Archive
+namespace Tiny7z.Archive
 {
     internal class SevenZipStreamsCompressor
     {
         #region Internal Classes
         internal class PackedStream
         {
-            public UInt64 NumStreams;
-            public UInt64[] Sizes;
-            public UInt32?[] CRCs;
+            public ulong NumStreams;
+            public ulong[] Sizes;
+            public uint?[] CRCs;
             public SevenZipHeader.Folder Folder;
         }
         #endregion Internal Classes
@@ -30,7 +30,7 @@ namespace pdj.tiny7z.Archive
         internal SevenZipStreamsCompressor(Stream stream)
         {
             this.stream = stream;
-            this.Method = null;
+            Method = null;
         }
         #endregion Internal Constructor
 
@@ -46,8 +46,8 @@ namespace pdj.tiny7z.Archive
             var ps = new PackedStream()
             {
                 NumStreams = 1,
-                Sizes = new UInt64[1] { 0 },
-                CRCs = new UInt32?[1] { null },
+                Sizes = new ulong[1] { 0 },
+                CRCs = new uint?[1] { null },
                 Folder = new SevenZipHeader.Folder()
                 {
                     NumCoders = 1,
@@ -55,7 +55,7 @@ namespace pdj.tiny7z.Archive
                     {
                         new SevenZipHeader.CoderInfo()
                         {
-                            Attributes = (Byte)MethodID.Raw.Length,
+                            Attributes = (byte)MethodID.Raw.Length,
                             CodecId = MethodID.Raw.ToArray(),
                             NumInStreams = 1,
                             NumOutStreams = 1
@@ -63,14 +63,14 @@ namespace pdj.tiny7z.Archive
                     },
                     NumInStreamsTotal = 1,
                     NumOutStreamsTotal = 1,
-                    PackedIndices = new UInt64[1] { 0 },
-                    UnPackSizes = new UInt64[1] { 0 },
+                    PackedIndices = new ulong[1] { 0 },
+                    UnPackSizes = new ulong[1] { 0 },
                     UnPackCRC = 0
                 }
             };
 
             // remember current offsets
-            long outStreamStartOffset = this.stream.Position;
+            long outStreamStartOffset = stream.Position;
             long inStreamStartOffset = inputStream.Position;
 
             // encode while calculating CRCs
@@ -78,7 +78,7 @@ namespace pdj.tiny7z.Archive
             using (var outCRCStream = new CRCStream(stream))
             {
                 LZMA.CLzmaEnc encoder = LZMA.LzmaEnc_Create(LZMA.ISzAlloc.SmallAlloc);
-                LZMA.CLzmaEncProps encoderProps = LZMA.CLzmaEncProps.LzmaEncProps_Init();
+                var encoderProps = LZMA.CLzmaEncProps.LzmaEncProps_Init();
                 LZMA.CSeqOutStream outputHelper;
                 LZMA.CSeqInStream inputHelper;
                 LZMA.SRes res = LZMA.SZ_OK;
@@ -115,22 +115,22 @@ namespace pdj.tiny7z.Archive
                 encoder.LzmaEnc_Destroy(LZMA.ISzAlloc.SmallAlloc, LZMA.ISzAlloc.BigAlloc);
 
                 // keep settings in header
-                ps.Folder.CodersInfo[0].Attributes |= (Byte)SevenZipHeader.CoderInfo.AttrHasAttributes;
+                ps.Folder.CodersInfo[0].Attributes |= (byte)SevenZipHeader.CoderInfo.AttrHasAttributes;
                 ps.Folder.CodersInfo[0].Properties = properties.ToArray();
-                ps.Folder.CodersInfo[0].PropertiesSize = (UInt64)ps.Folder.CodersInfo[0].Properties.Length;
+                ps.Folder.CodersInfo[0].PropertiesSize = (ulong)ps.Folder.CodersInfo[0].Properties.Length;
 
                 // store sizes and checksums
-                ps.Folder.UnPackSizes[0] = (UInt64)(inputStream.Position - inStreamStartOffset);
-                ps.Folder.UnPackCRC = inCRCStream.Result;
-                ps.Sizes[0] = (UInt64)(this.stream.Position - outStreamStartOffset);
-                ps.CRCs[0] = outCRCStream.Result;
+                ps.Folder.UnPackSizes[0] = (ulong)(inputStream.Position - inStreamStartOffset);
+                ps.Folder.UnPackCRC = inCRCStream.CRC;
+                ps.Sizes[0] = (ulong)(stream.Position - outStreamStartOffset);
+                ps.CRCs[0] = outCRCStream.CRC;
 
                 // handle progress offsets (in case compressor is called multiple times, with non-solid archives for instance)
                 if (progressProvider != null)
                 {
                     progressProvider.IncreaseOffsetBy((long)ps.Folder.UnPackSizes[0], (long)ps.Sizes[0]);
                     progressProvider.SetProgress(0, 0);
-                }
+            }
             }
 
             return ps;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace pdj.tiny7z.Common
+namespace Tiny7z.Common
 {
     /// <summary>
     /// MultiFileStream - Allows treating a bunch of files sequentially to behave as if they're one stream.
@@ -16,18 +16,18 @@ namespace pdj.tiny7z.Common
             public Stream Get(FileAccess fileAccess)
             {
                 Stream s = null;
-                if (this.stream != null)
+                if (stream != null)
                 {
-                    s = this.stream;
+                    s = stream;
                     if ((fileAccess == FileAccess.Read && !s.CanRead) || (fileAccess == FileAccess.Write && !s.CanWrite))
                         throw new IOException();
                 }
-                else if (this.filePath != null)
+                else if (filePath != null)
                 {
                     if (fileAccess == FileAccess.Read)
-                        s = File.Open(this.filePath, FileMode.Open, FileAccess.Read);
+                        s = File.Open(filePath, FileMode.Open, FileAccess.Read);
                     else
-                        s = File.Open(this.filePath, FileMode.Create, FileAccess.Write);
+                        s = File.Open(filePath, FileMode.Create, FileAccess.Write);
                 }
                 Clear();
                 return s;
@@ -35,50 +35,50 @@ namespace pdj.tiny7z.Common
 
             public long Size()
             {
-                if (this.stream != null)
-                    return this.stream.Length;
-                else if (this.filePath != null)
-                    return new FileInfo(this.filePath).Length;
+                if (stream != null)
+                    return stream.Length;
+                else if (filePath != null)
+                    return new FileInfo(filePath).Length;
                 return -1;
             }
 
             public Source Set(Stream stream)
             {
                 this.stream = stream;
-                this.filePath = null;
+                filePath = null;
                 return this;
             }
 
             public Source Set(string filePath)
             {
-                this.stream = null;
+                stream = null;
                 this.filePath = filePath;
                 return this;
             }
 
             public Source Clear()
             {
-                this.stream = null;
-                this.filePath = null;
+                stream = null;
+                filePath = null;
                 return this;
             }
 
             public Source()
             {
-                this.stream = null;
-                this.filePath = null;
+                stream = null;
+                filePath = null;
             }
 
             public Source(string FilePath)
             {
-                this.stream = null;
-                this.filePath = FilePath;
+                stream = null;
+                filePath = FilePath;
             }
 
             public Source(Stream Stream)
             {
-                this.stream = Stream;
-                this.filePath = null;
+                stream = Stream;
+                filePath = null;
             }
 
             Stream stream;
@@ -90,7 +90,7 @@ namespace pdj.tiny7z.Common
         /// </summary>
         protected override Stream NextStream()
         {
-            return this.Sources[currentIndex].Get(this.fileAccess);
+            return Sources[currentIndex].Get(fileAccess);
         }
 
         /// <summary>
@@ -113,10 +113,10 @@ namespace pdj.tiny7z.Common
                 throw new ArgumentOutOfRangeException();
 
             this.fileAccess = fileAccess;
-            this.Sources = sources;
+            Sources = sources;
             for (long i = 0; i < sources.LongLength; ++i)
             {
-                this.Sizes[i] = Sources[i].Size();
+                Sizes[i] = Sources[i].Size();
             }
         }
 

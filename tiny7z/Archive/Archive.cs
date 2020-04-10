@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace pdj.tiny7z.Archive
+﻿namespace Tiny7z.Archive
 {
-    public abstract class Archive
+	public abstract class Archive
     {
         public virtual bool IsValid
         {

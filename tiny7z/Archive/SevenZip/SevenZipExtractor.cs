@@ -1,11 +1,11 @@
-﻿using pdj.tiny7z.Common;
+﻿using Tiny7z.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace pdj.tiny7z.Archive
+namespace Tiny7z.Archive
 {
     /// <summary>
     /// 7zip extractor class to extract files off an archive by filenames or index.
@@ -67,12 +67,12 @@ namespace pdj.tiny7z.Archive
 
         public IExtractor ExtractArchive(string outputDirectory)
         {
-            return ExtractFiles(new UInt64[0], outputDirectory);
+            return ExtractFiles(new ulong[0], outputDirectory);
         }
 
         public IExtractor ExtractArchive(Func<ArchiveFile, Stream> onStreamRequest, Action<ArchiveFile, Stream> onStreamClose = null)
         {
-            return ExtractFiles(new UInt64[0], onStreamRequest, onStreamClose);
+            return ExtractFiles(new ulong[0], onStreamRequest, onStreamClose);
         }
 
         public IExtractor ExtractFile(string fileName, string outputDirectory)
@@ -80,7 +80,7 @@ namespace pdj.tiny7z.Archive
             long index = findFileIndex(fileName, true);
             if (index == -1)
                 throw new FileNotFoundException($"`{fileName}` not found.");
-            return ExtractFile((UInt64)index, outputDirectory);
+            return ExtractFile((ulong)index, outputDirectory);
         }
 
         public IExtractor ExtractFile(string fileName, Stream outputStream)
@@ -88,10 +88,10 @@ namespace pdj.tiny7z.Archive
             long index = findFileIndex(fileName, true);
             if (index == -1)
                 throw new FileNotFoundException($"`{fileName}` not found.");
-            return ExtractFile((UInt64)index, outputStream);
+            return ExtractFile((ulong)index, outputStream);
         }
 
-        public IExtractor ExtractFile(UInt64 index, string outputDirectory)
+        public IExtractor ExtractFile(ulong index, string outputDirectory)
         {
             if (index >= (ulong)_Files.LongLength)
                 throw new ArgumentOutOfRangeException($"Index `{index}` is out of range.");
@@ -110,7 +110,7 @@ namespace pdj.tiny7z.Archive
                 Trace.TraceInformation($"Filename: `{file.Name}`, file size: `{file.Size} bytes`.");
                 var sx = new SevenZipStreamsExtractor(stream, header.RawHeader.MainStreamsInfo, Password);
                 using (Stream fileStream = File.Create(fullPath))
-                    sx.Extract((UInt64)file.UnPackIndex, fileStream, szpp);
+                    sx.Extract((ulong)file.UnPackIndex, fileStream, szpp);
                 if (file.Time != null)
                     File.SetLastWriteTimeUtc(fullPath, (DateTime)file.Time);
             }
@@ -118,7 +118,7 @@ namespace pdj.tiny7z.Archive
             return this;
         }
 
-        public IExtractor ExtractFile(UInt64 index, Stream outputStream)
+        public IExtractor ExtractFile(ulong index, Stream outputStream)
         {
             if (index >= (ulong)_Files.LongLength)
                 throw new ArgumentOutOfRangeException($"Index `{index}` is out of range.");
@@ -141,7 +141,7 @@ namespace pdj.tiny7z.Archive
                 Trace.TraceInformation($"Filename: `{file.Name}`, file size: `{file.Size} bytes`.");
                 Trace.TraceInformation("Extracting...");
                 var sx = new SevenZipStreamsExtractor(stream, header.RawHeader.MainStreamsInfo, Password);
-                sx.Extract((UInt64)file.UnPackIndex, outputStream, szpp);
+                sx.Extract((ulong)file.UnPackIndex, outputStream, szpp);
             }
 
             return this;
@@ -149,13 +149,13 @@ namespace pdj.tiny7z.Archive
 
         public IExtractor ExtractFiles(string[] fileNames, string outputDirectory)
         {
-            var indices = new List<UInt64>();
+            var indices = new List<ulong>();
             foreach (var fileName in fileNames)
             {
                 long index = findFileIndex(fileName, true);
                 if (index == -1)
                     throw new ArgumentOutOfRangeException($"Filename `{fileName}` doesn't exist in archive.");
-                indices.Add((UInt64)index);
+                indices.Add((ulong)index);
             }
             if (indices.Any())
                 return ExtractFiles(indices.ToArray(), outputDirectory);
@@ -165,13 +165,13 @@ namespace pdj.tiny7z.Archive
 
         public IExtractor ExtractFiles(string[] fileNames, Func<ArchiveFile, Stream> onStreamRequest, Action<ArchiveFile, Stream> onStreamClose = null)
         {
-            var indices = new List<UInt64>();
+            var indices = new List<ulong>();
             foreach (var fileName in fileNames)
             {
                 long index = findFileIndex(fileName, true);
                 if (index == -1)
                     throw new ArgumentOutOfRangeException($"Filename `{fileName}` doesn't exist in archive.");
-                indices.Add((UInt64)index);
+                indices.Add((ulong)index);
             }
             if (indices.Any())
                 return ExtractFiles(indices.ToArray(), onStreamRequest, onStreamClose);
@@ -179,7 +179,7 @@ namespace pdj.tiny7z.Archive
             return this;
         }
 
-        public IExtractor ExtractFiles(UInt64[] indices, string outputDirectory)
+        public IExtractor ExtractFiles(ulong[] indices, string outputDirectory)
         {
             if (indices.Any(index => index >= (ulong)_Files.LongLength))
                 throw new ArgumentOutOfRangeException("An index given in `indices[]` array is out of range.");
@@ -239,7 +239,7 @@ namespace pdj.tiny7z.Archive
             return this;
         }
 
-        public IExtractor ExtractFiles(UInt64[] indices, Func<ArchiveFile, Stream> onStreamRequest, Action<ArchiveFile, Stream> onStreamClose = null)
+        public IExtractor ExtractFiles(ulong[] indices, Func<ArchiveFile, Stream> onStreamRequest, Action<ArchiveFile, Stream> onStreamClose = null)
         {
             if (indices.Any(index => index >= (ulong)_Files.LongLength))
                 throw new ArgumentOutOfRangeException("An index given in `indices[]` array is out of range.");
@@ -291,8 +291,8 @@ namespace pdj.tiny7z.Archive
 
         public IExtractor Finalize()
         {
-            this.stream = null;
-            this.header = null;
+            stream = null;
+            header = null;
             return this;
         }
         #endregion Public Methods
@@ -493,8 +493,8 @@ namespace pdj.tiny7z.Archive
                 if (ups == 0)
                     throw new SevenZipException("Unexpected, no UnPackStream in Folder.");
 
-                UInt64 size = folder.GetUnPackSize();
-                UInt32? crc = folder.UnPackCRC;
+                ulong size = folder.GetUnPackSize();
+                uint? crc = folder.UnPackCRC;
                 for (long j = 0; j < ups; ++j)
                 {
                     if (ssi != null && ssi.UnPackSizes.Any())
@@ -523,7 +523,7 @@ namespace pdj.tiny7z.Archive
                             throw new SevenZipException("Missing Files entries for defined sizes.");
                     _Files[fileIndex].Size = size;
                     _Files[fileIndex].CRC = crc;
-                    _Files[fileIndex].UnPackIndex = (UInt64?)streamIndex;
+                    _Files[fileIndex].UnPackIndex = (ulong?)streamIndex;
 
                     fileIndex++;
                     streamIndex++;

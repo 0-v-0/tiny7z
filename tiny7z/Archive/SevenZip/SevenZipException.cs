@@ -1,7 +1,6 @@
-﻿using pdj.tiny7z.Common;
-using System;
+﻿using System;
 
-namespace pdj.tiny7z.Archive
+namespace Tiny7z.Archive
 {
     public class SevenZipException : Exception
     {

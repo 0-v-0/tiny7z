@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ManagedLzma.LZMA.Master
 {
-    partial class LZMA
+	partial class LZMA
     {
         /* ---------- LZMA Properties ---------- */
 
@@ -27,10 +24,10 @@ namespace ManagedLzma.LZMA.Master
             public CLzmaProps() { }
             public CLzmaProps(CLzmaProps other)
             {
-                this.mLC = other.mLC;
-                this.mLP = other.mLP;
-                this.mPB = other.mPB;
-                this.mDicSize = other.mDicSize;
+                mLC = other.mLC;
+                mLP = other.mLP;
+                mPB = other.mPB;
+                mDicSize = other.mDicSize;
             }
 
             /* LzmaProps_Decode - decodes properties
@@ -210,7 +207,7 @@ namespace ManagedLzma.LZMA.Master
             public SRes LzmaDec_AllocateProbs(P<byte> props, uint propsSize, ISzAlloc alloc)
             {
                 SRes res;
-                CLzmaProps propNew = new CLzmaProps();
+                var propNew = new CLzmaProps();
                 if ((res = propNew.LzmaProps_Decode(props, propsSize)) != SZ_OK) return res;
                 if ((res = LzmaDec_AllocateProbs2(propNew, alloc)) != SZ_OK) return res;
                 mProp = new CLzmaProps(propNew);
@@ -225,7 +222,7 @@ namespace ManagedLzma.LZMA.Master
 
             public SRes LzmaDec_Allocate(P<byte> props, uint propsSize, ISzAlloc alloc)
             {
-                CLzmaProps propNew = new CLzmaProps();
+                var propNew = new CLzmaProps();
 
                 SRes res;
                 if ((res = propNew.LzmaProps_Decode(props, propsSize)) != SZ_OK)
@@ -537,7 +534,7 @@ namespace ManagedLzma.LZMA.Master
                 if (inSize < RC_INIT_SIZE)
                     return SZ_ERROR_INPUT_EOF;
 
-                CLzmaDec decoder = new CLzmaDec();
+                var decoder = new CLzmaDec();
                 decoder.LzmaDec_Construct();
 
                 SRes res;

@@ -1,11 +1,11 @@
-﻿using pdj.tiny7z.Common;
+﻿using Tiny7z.Common;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace pdj.tiny7z.Archive
+namespace Tiny7z.Archive
 {
     internal class SevenZipStreamsExtractor : Compression.IPasswordProvider
     {
@@ -167,7 +167,7 @@ namespace pdj.tiny7z.Archive
             }
         }
 
-        private Stream createDecoderStreamForCoder(Stream[] packedStreams, UInt64[] packedSizes, Stream[] outputStreams, SevenZipHeader.Folder folder, UInt64 coderIndex)
+        private Stream createDecoderStreamForCoder(Stream[] packedStreams, ulong[] packedSizes, Stream[] outputStreams, SevenZipHeader.Folder folder, ulong coderIndex)
         {
             // find starting in and out id for coder
             ulong inStreamId = 0;
@@ -182,21 +182,21 @@ namespace pdj.tiny7z.Archive
             Stream[] inStreams = new Stream[folder.CodersInfo[coderIndex].NumInStreams];
             for (int i = 0; i < inStreams.Length; ++i, ++inStreamId)
             {
-                Int64 bindPairIndex = folder.FindBindPairForInStream(inStreamId);
+                long bindPairIndex = folder.FindBindPairForInStream(inStreamId);
                 if (bindPairIndex == -1)
                 {
-                    Int64 index = folder.FindPackedIndexForInStream(inStreamId);
+                    long index = folder.FindPackedIndexForInStream(inStreamId);
                     if (index == -1)
                         throw new SevenZipException("Could not find input stream binding.");
                     inStreams[i] = packedStreams[index];
                 }
                 else
                 {
-                    UInt64 pairedOutIndex = folder.BindPairsInfo[bindPairIndex].OutIndex;
+                    ulong pairedOutIndex = folder.BindPairsInfo[bindPairIndex].OutIndex;
                     if (outputStreams[pairedOutIndex] != default(Stream))
                         throw new SevenZipException("Overlapping stream bindings are invalid.");
 
-                    UInt64 subCoderIndex = findCoderIndexForOutStreamIndex(folder, pairedOutIndex);
+                    ulong subCoderIndex = findCoderIndexForOutStreamIndex(folder, pairedOutIndex);
                     inStreams[i] = createDecoderStreamForCoder(packedStreams, packedSizes, outputStreams, folder, subCoderIndex);
 
                     if (outputStreams[pairedOutIndex] != default(Stream))
@@ -233,11 +233,11 @@ namespace pdj.tiny7z.Archive
 
             // create packed substreams
             Stream[] packedStreams = new Stream[folder.NumPackedStreams];
-            UInt64[] packedSizes = new UInt64[folder.NumPackedStreams];
+            ulong[] packedSizes = new ulong[folder.NumPackedStreams];
             for (ulong i = 0, currentPackPos = packPos; i < folder.NumPackedStreams; ++i)
             {
-                UInt64 packedSize = streamsInfo.PackInfo.Sizes[packIndex + i];
-                packedStreams[i] = new SubStream(this.stream, (long)currentPackPos, (long)packedSize);
+                ulong packedSize = streamsInfo.PackInfo.Sizes[packIndex + i];
+                packedStreams[i] = new SubStream(stream, (long)currentPackPos, (long)packedSize);
                 packedSizes[i] = packedSize;
                 currentPackPos += packedSize;
             }
@@ -246,15 +246,15 @@ namespace pdj.tiny7z.Archive
             Stream[] outputStreams = new Stream[folder.NumOutStreamsTotal];
 
             // find primary output stream
-            UInt64 primaryCoderIndex;
-            UInt64 primaryOutStreamIndex;
+            ulong primaryCoderIndex;
+            ulong primaryOutStreamIndex;
             findPrimaryOutStreamIndex(folder, out primaryCoderIndex, out primaryOutStreamIndex);
 
             // start recursive stream creation
             return createDecoderStreamForCoder(packedStreams, packedSizes, outputStreams, folder, primaryCoderIndex);
         }
 
-        private static UInt64 findCoderIndexForOutStreamIndex(SevenZipHeader.Folder folder, UInt64 outStreamIndex)
+        private static ulong findCoderIndexForOutStreamIndex(SevenZipHeader.Folder folder, ulong outStreamIndex)
         {
             for (ulong coderIndex = 0, index = 0; coderIndex < folder.NumCoders; ++coderIndex)
                 for (ulong i = 0; i < folder.CodersInfo[coderIndex].NumOutStreams; ++i, ++index)
@@ -263,17 +263,17 @@ namespace pdj.tiny7z.Archive
             throw new SevenZipException($"Could not find coder index for out stream index `{outStreamIndex}`.");
         }
 
-        private static void findPrimaryOutStreamIndex(SevenZipHeader.Folder folder, out UInt64 primaryCoderIndex, out UInt64 primaryOutStreamIndex)
+        private static void findPrimaryOutStreamIndex(SevenZipHeader.Folder folder, out ulong primaryCoderIndex, out ulong primaryOutStreamIndex)
         {
             bool foundPrimaryOutStream = false;
             primaryCoderIndex = 0;
             primaryOutStreamIndex = 0;
 
-            for (UInt64 outStreamIndex = 0, coderIndex = 0;
-                coderIndex < (UInt64)folder.CodersInfo.LongLength;
+            for (ulong outStreamIndex = 0, coderIndex = 0;
+                coderIndex < (ulong)folder.CodersInfo.LongLength;
                 coderIndex++)
             {
-                for (UInt64 coderOutStreamIndex = 0;
+                for (ulong coderOutStreamIndex = 0;
                     coderOutStreamIndex < folder.CodersInfo[coderIndex].NumOutStreams;
                     coderOutStreamIndex++, outStreamIndex++)
                 {
