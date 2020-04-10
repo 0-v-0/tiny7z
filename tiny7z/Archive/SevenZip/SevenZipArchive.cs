@@ -145,7 +145,7 @@ namespace Tiny7z.Archive
                 stream.Close();
                 stream.Dispose();
                 stream = null;
-        }
+            }
             fileAccess = null;
             Header = null;
             IsValid = false;

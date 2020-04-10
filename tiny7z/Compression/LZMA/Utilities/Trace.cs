@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace ManagedLzma.LZMA
+﻿namespace ManagedLzma.LZMA
 {
-	namespace Master
-	{
-		partial class LZMA
+    namespace Master
+    {
+        partial class LZMA
         {
             /*private static void TR(string str, int arg)
             {

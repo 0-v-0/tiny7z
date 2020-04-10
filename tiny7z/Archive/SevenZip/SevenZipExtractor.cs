@@ -58,10 +58,10 @@ namespace Tiny7z.Archive
             Finalize();
         }
 
-        public void Dump()
+        /*public void Dump()
         {
             // TODO
-        }
+        }*/
 
         public IExtractor ExtractArchive(string outputDirectory)
         {

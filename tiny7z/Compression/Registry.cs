@@ -44,8 +44,8 @@ namespace Tiny7z.Compression
                     return new BcjDecoderStream(inStreams.Single(), properties, limit);
                 case Method.BCJ2:
                     return new Bcj2DecoderStream(inStreams, properties, limit);
-                //case Method.LZMA:
-                    //return new LzmaDecoderStream(inStreams.Single(), properties, limit);
+                case Method.LZMA:
+                    return new LzmaDecoderStream(inStreams.Single(), properties, limit);
                 case Method.LZMA2:
                     return new Lzma2DecoderStream(inStreams.Single(), properties.First(), limit);
                 //case Method.PPMd:

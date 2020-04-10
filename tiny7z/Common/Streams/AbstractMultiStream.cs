@@ -75,7 +75,7 @@ namespace Tiny7z.Common
             {
                 CloseStream();
 
-                internalStream.Dispose();
+                //internalStream.Dispose();
                 internalStream = null;
             }
         }
@@ -266,7 +266,7 @@ namespace Tiny7z.Common
 
             // close stream properly
             CloseStream();
-            internalStream.Dispose();
+            //internalStream.Dispose();
             internalStream = null;
 
             // reset per-stream counters
@@ -280,7 +280,7 @@ namespace Tiny7z.Common
 
             // set internal stream and wrap it with crc, if any
             if (nextStream != null)
-                internalStream = new CRCStream(nextStream, false);
+                internalStream = new CRCStream(nextStream);
 
             return internalStream != null;
         }

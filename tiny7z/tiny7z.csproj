@@ -85,6 +85,7 @@
     <Compile Include="Compression\LZMA\Implementation\Threads.cs" />
     <Compile Include="Compression\LZMA\Implementation\Types.cs" />
     <Compile Include="Compression\LZMA\Lzma2DecoderStream.cs" />
+    <Compile Include="Compression\LZMA\LzmaDecoderStream.cs" />
     <Compile Include="Compression\LZMA\Utilities\Pointer.cs" />
     <Compile Include="Compression\LZMA\Utilities\Trace.cs" />
     <Compile Include="Compression\LZMA\Utilities\Utils.cs" />

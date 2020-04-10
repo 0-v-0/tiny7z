@@ -157,11 +157,11 @@ namespace Tiny7z.Archive
                 {
                     { new MethodID( 0x00 ), Compression.Registry.Method.Copy },
                     { new MethodID( 0x21 ), Compression.Registry.Method.LZMA2 },
-                    //{ new MethodID( 0x03, 0x01, 0x01 ), Compression.Registry.Method.LZMA },
+                    { new MethodID( 0x03, 0x01, 0x01 ), Compression.Registry.Method.LZMA },
                     { new MethodID( 0x03, 0x03, 0x01, 0x03 ), Compression.Registry.Method.BCJ },
                     { new MethodID( 0x03, 0x03, 0x01, 0x1B ), Compression.Registry.Method.BCJ2 },
                     //{ new MethodID( 0x03, 0x04, 0x01 ), Compression.Registry.Method.PPMd },
-                    { new MethodID( 0x04, 0x01, 0x08 ), Compression.Registry.Method.Deflate },
+                    //{ new MethodID( 0x04, 0x01, 0x08 ), Compression.Registry.Method.Deflate },
                     //{ new MethodID( 0x04, 0x02, 0x02 ), Compression.Registry.Method.BZip2 },
                     { new MethodID( 0x06, 0xF1, 0x07, 0x01 ), Compression.Registry.Method.AES },
                 };
