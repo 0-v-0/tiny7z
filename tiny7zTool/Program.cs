@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace pdj.tiny7z
+namespace Tiny7z
 {
     class Program
     {

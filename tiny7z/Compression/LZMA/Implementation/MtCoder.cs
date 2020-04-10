@@ -28,13 +28,13 @@ namespace ManagedLzma.LZMA.Master
                     if (Event_Wait(mStartEvent) != 0)
                         return; // SZ_ERROR_THREAD;
 
-                    Trace.MatchObjectWait(this, "LoopThreadFunc");
+                    //Trace.MatchObjectWait(this, "LoopThreadFunc");
                     if (mStop)
                     {
-                        Trace.MatchObjectDestroy(this, "LoopThreadFunc");
+                        //Trace.MatchObjectDestroy(this, "LoopThreadFunc");
                         return; // 0;
                     }
-                    Trace.MatchObjectWait(this, "LoopThreadFunc");
+                    //Trace.MatchObjectWait(this, "LoopThreadFunc");
 
                     /* mRes = mFunc(mParam)*/
                     mFunc();
@@ -64,9 +64,9 @@ namespace ManagedLzma.LZMA.Master
 
             internal SRes LoopThread_Create()
             {
-                Trace.MatchObjectCreate(this, "LoopThread_Create");
+                //Trace.MatchObjectCreate(this, "LoopThread_Create");
                 mStop = false;
-                Trace.MatchObjectWait(this, "LoopThread_Create");
+                //Trace.MatchObjectWait(this, "LoopThread_Create");
 
                 SRes res;
                 if ((res = AutoResetEvent_CreateNotSignaled(out mStartEvent)) != SZ_OK)
@@ -78,9 +78,9 @@ namespace ManagedLzma.LZMA.Master
 
             internal SRes LoopThread_StopAndWait()
             {
-                Trace.MatchObjectWait(this, "LoopThread_StopAndWait");
+                //Trace.MatchObjectWait(this, "LoopThread_StopAndWait");
                 mStop = true;
-                Trace.MatchObjectWait(this, "LoopThread_StopAndWait");
+                //Trace.MatchObjectWait(this, "LoopThread_StopAndWait");
 
                 if (Event_Set(mStartEvent) != 0)
                     return SZ_ERROR_THREAD;
@@ -200,7 +200,7 @@ namespace ManagedLzma.LZMA.Master
 
             internal CMtThread(int index, CMtCoder mtCoder) // CMtThread_Construct
             {
-                Trace.MatchObjectCreate(this, "CMtThread_Construct");
+                //Trace.MatchObjectCreate(this, "CMtThread_Construct");
 
                 mIndex = index;
                 mMtCoder = mtCoder;
@@ -230,14 +230,14 @@ namespace ManagedLzma.LZMA.Master
 
                 CMtThread next = GET_NEXT_THREAD();
 
-                Trace.MatchObjectWait(this, "MtThread_Process");
+                //Trace.MatchObjectWait(this, "MtThread_Process");
                 if (mStopReading)
                 {
                     next.mStopReading = true;
-                    Trace.MatchObjectWait(this, "MtThread_Process");
+                    //Trace.MatchObjectWait(this, "MtThread_Process");
                     return Event_Set(next.mCanRead) == 0 ? SZ_OK : SZ_ERROR_THREAD;
                 }
-                Trace.MatchObjectWait(this, "MtThread_Process");
+                //Trace.MatchObjectWait(this, "MtThread_Process");
 
                 {
                     long size = mMtCoder.mBlockSize;
@@ -249,9 +249,9 @@ namespace ManagedLzma.LZMA.Master
 
                     stop = (size != mMtCoder.mBlockSize);
 
-                    Trace.MatchObjectWait(this, "MtThread_Process:2");
+                    //Trace.MatchObjectWait(this, "MtThread_Process:2");
                     next.mStopReading = stop;
-                    Trace.MatchObjectWait(this, "MtThread_Process:2");
+                    //Trace.MatchObjectWait(this, "MtThread_Process:2");
 
                     if (Event_Set(next.mCanRead) != 0)
                         return SZ_ERROR_THREAD;
@@ -264,13 +264,13 @@ namespace ManagedLzma.LZMA.Master
                     if (Event_Wait(mCanWrite) != 0)
                         return SZ_ERROR_THREAD;
 
-                    Trace.MatchObjectWait(this, "MtThread_Process:3");
+                    //Trace.MatchObjectWait(this, "MtThread_Process:3");
                     if (mStopWriting)
                     {
-                        Trace.MatchObjectWait(this, "MtThread_Process:3");
+                        //Trace.MatchObjectWait(this, "MtThread_Process:3");
                         return SZ_ERROR_FAIL;
                     }
-                    Trace.MatchObjectWait(this, "MtThread_Process:3");
+                    //Trace.MatchObjectWait(this, "MtThread_Process:3");
 
                     if (mMtCoder.mOutStream.Write(mOutBuf, destSize) != destSize)
                         return SZ_ERROR_WRITE;
@@ -292,10 +292,10 @@ namespace ManagedLzma.LZMA.Master
                         mMtCoder.MtCoder_SetError(res);
                         mMtCoder.mMtProgress.MtProgress_SetError(res);
 
-                        Trace.MatchObjectWait(this, "ThreadFunc");
+                        //Trace.MatchObjectWait(this, "ThreadFunc");
                         next.mStopReading = true;
                         next.mStopWriting = true;
-                        Trace.MatchObjectWait(this, "ThreadFunc");
+                        //Trace.MatchObjectWait(this, "ThreadFunc");
 
                         Event_Set(next.mCanRead);
                         Event_Set(next.mCanWrite);
@@ -319,7 +319,7 @@ namespace ManagedLzma.LZMA.Master
 
             internal void CMtThread_Destruct()
             {
-                Trace.MatchObjectDestroy(this, "CMtThread_Destruct");
+                //Trace.MatchObjectDestroy(this, "CMtThread_Destruct");
                 CMtThread_CloseEvents();
 
                 if (Thread_WasCreated(mThread.mThread))
@@ -359,10 +359,10 @@ namespace ManagedLzma.LZMA.Master
                         return SZ_ERROR_MEM;
                 }
 
-                Trace.MatchObjectWait(this, "CMtThread_Prepare");
+                //Trace.MatchObjectWait(this, "CMtThread_Prepare");
                 mStopReading = false;
                 mStopWriting = false;
-                Trace.MatchObjectWait(this, "CMtThread_Prepare");
+                //Trace.MatchObjectWait(this, "CMtThread_Prepare");
 
                 if (AutoResetEvent_CreateNotSignaled(out mCanRead) != SZ_OK)
                     return SZ_ERROR_THREAD;
@@ -460,9 +460,9 @@ namespace ManagedLzma.LZMA.Master
                         if (t.mThread.LoopThread_StartSubThread() != SZ_OK)
                         {
                             res = SZ_ERROR_THREAD;
-                            Trace.MatchObjectWait(mThreads[0], "MtCoder_Code");
+                            //Trace.MatchObjectWait(mThreads[0], "MtCoder_Code");
                             mThreads[0].mStopReading = true;
-                            Trace.MatchObjectWait(mThreads[0], "MtCoder_Code");
+                            //Trace.MatchObjectWait(mThreads[0], "MtCoder_Code");
                             break;
                         }
                     }

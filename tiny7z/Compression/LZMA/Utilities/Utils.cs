@@ -2,11 +2,11 @@
 
 namespace ManagedLzma.LZMA
 {
-	internal interface IBufferPool
+	/*internal interface IBufferPool
     {
         P<byte> Allocate(int size);
         void Release(P<byte> buffer);
-    }
+    }*/
 
     internal static class CUtils
     {

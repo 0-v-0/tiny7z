@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Linq;
 
 namespace Tiny7z.Common
 {
-    public static class StreamExtensions
+	public static class StreamExtensions
     {
         /// <summary>
         /// Reads a bitmask only if the AllAreDefined byte is == 0
@@ -92,14 +91,14 @@ namespace Tiny7z.Common
             }
             return length;
         }
-
+/*
         /// <summary>
         /// Calculates size of a boolean vector in bytes
         /// </summary>
         public static ulong BoolVectorSize(bool[] vector)
         {
             return ((ulong)vector.LongLength + 7) / 8;
-        }
+        }*/
 
         /// <summary>
         /// Stream extension to get a struct out of a byte sequence
@@ -113,14 +112,14 @@ namespace Tiny7z.Common
 
             return buffer.GetStruct<T>();
         }
-
+/*
         /// <summary>
         /// Stream extension to write a struct as a byte sequence
         /// </summary>
         public static void WriteStruct<T>(this Stream stream, T structObj) where T : struct
         {
             stream.Write(structObj.GetByteArray(), 0, Marshal.SizeOf(typeof(T)));
-        }
+        }*/
 
         /// <summary>
         /// Read one encoded 64-bits integer from stream
@@ -171,7 +170,7 @@ namespace Tiny7z.Common
             stream.Write(data.ToArray(), 0, data.Count);
             return data.Count;
         }
-
+/*
         /// <summary>
         /// Calculates one encoded 64-bits integer's actual size in bytes
         /// </summary>
@@ -182,7 +181,7 @@ namespace Tiny7z.Common
                 if (y < (((ulong)1 << (i * 7))))
                     break;
             return i;
-        }
+        }*/
 
         /// <summary>
         /// Extension to read a byte from a stream, but throw instead of returning -1 if end of stream is reached.

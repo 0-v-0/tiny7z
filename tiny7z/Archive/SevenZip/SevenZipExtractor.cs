@@ -1,16 +1,14 @@
-﻿using Tiny7z.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 namespace Tiny7z.Archive
 {
-    /// <summary>
-    /// 7zip extractor class to extract files off an archive by filenames or index.
-    /// </summary>
-    public class SevenZipExtractor : IExtractor
+	/// <summary>
+	/// 7zip extractor class to extract files off an archive by filenames or index.
+	/// </summary>
+	public class SevenZipExtractor : IExtractor
     {
         #region Public Properties
         public IReadOnlyList<ArchiveFile> Files
@@ -107,7 +105,7 @@ namespace Tiny7z.Archive
                     szpp = new SevenZipProgressProvider(_Files, new[] { index }, ProgressDelegate);
 
                 // extraction
-                Trace.TraceInformation($"Filename: `{file.Name}`, file size: `{file.Size} bytes`.");
+                //Trace.TraceInformation($"Filename: `{file.Name}`, file size: `{file.Size} bytes`.");
                 var sx = new SevenZipStreamsExtractor(stream, header.RawHeader.MainStreamsInfo, Password);
                 using (Stream fileStream = File.Create(fullPath))
                     sx.Extract((ulong)file.UnPackIndex, fileStream, szpp);
@@ -128,7 +126,7 @@ namespace Tiny7z.Archive
             SevenZipArchiveFile file = _Files[index];
             if (file.IsEmpty)
             {
-                Trace.TraceWarning($"Filename: {file.Name} is a directory, empty file or anti file, nothing to output to stream.");
+                //Trace.TraceWarning($"Filename: {file.Name} is a directory, empty file or anti file, nothing to output to stream.");
             }
             else
             {
@@ -138,8 +136,8 @@ namespace Tiny7z.Archive
                     szpp = new SevenZipProgressProvider(_Files, new[] { index }, ProgressDelegate);
 
                 // extraction
-                Trace.TraceInformation($"Filename: `{file.Name}`, file size: `{file.Size} bytes`.");
-                Trace.TraceInformation("Extracting...");
+                //Trace.TraceInformation($"Filename: `{file.Name}`, file size: `{file.Size} bytes`.");
+                //Trace.TraceInformation("Extracting...");
                 var sx = new SevenZipStreamsExtractor(stream, header.RawHeader.MainStreamsInfo, Password);
                 sx.Extract((ulong)file.UnPackIndex, outputStream, szpp);
             }
@@ -202,7 +200,7 @@ namespace Tiny7z.Archive
             // no file to decompress
             if (!streamIndices.Any())
             {
-                Trace.TraceWarning("ExtractFiles: No decoding required.");
+                //Trace.TraceWarning("ExtractFiles: No decoding required.");
                 return this;
             }
 
@@ -212,7 +210,7 @@ namespace Tiny7z.Archive
                 szpp = new SevenZipProgressProvider(_Files, indices, ProgressDelegate);
 
             // extraction
-            Trace.TraceInformation("Extracting...");
+            //Trace.TraceInformation("Extracting...");
             var sx = new SevenZipStreamsExtractor(stream, header.RawHeader.MainStreamsInfo, Password);
             sx.ExtractMultiple(
                 streamIndices.ToArray(),
@@ -220,7 +218,7 @@ namespace Tiny7z.Archive
                     SevenZipArchiveFile file = _Files[streamToFileIndex[index]];
                     string fullPath = Path.Combine(outputDirectory, PreserveDirectoryStructure ? file.Name : Path.GetFileName(file.Name));
 
-                    Trace.TraceInformation($"File index {index}, filename: {file.Name}, file size: {file.Size}");
+                    //Trace.TraceInformation($"File index {index}, filename: {file.Name}, file size: {file.Size}");
                     return new FileStream(fullPath,
                         FileMode.Create,
                         FileAccess.Write,
@@ -268,7 +266,7 @@ namespace Tiny7z.Archive
             // no file to decompress
             if (!streamToFileIndex.Any())
             {
-                Trace.TraceWarning("ExtractFiles: No decoding required.");
+                //Trace.TraceWarning("ExtractFiles: No decoding required.");
                 return this;
             }
 
@@ -278,7 +276,7 @@ namespace Tiny7z.Archive
                 szpp = new SevenZipProgressProvider(_Files, indices, ProgressDelegate);
 
             // extraction
-            Trace.TraceInformation("Extracting...");
+            //Trace.TraceInformation("Extracting...");
             var sx = new SevenZipStreamsExtractor(stream, header.RawHeader.MainStreamsInfo, Password);
             sx.ExtractMultiple(
                 streamIndices.ToArray(),
@@ -338,7 +336,7 @@ namespace Tiny7z.Archive
             {
                 if (AllowFileDeletions && File.Exists(fullPath))
                 {
-                    Trace.TraceInformation($"Deleting file \"{file.Name}\"");
+                    //Trace.TraceInformation($"Deleting file \"{file.Name}\"");
                     File.Delete(fullPath);
                 }
             }
@@ -346,11 +344,11 @@ namespace Tiny7z.Archive
             {
                 if (!PreserveDirectoryStructure)
                 {
-                    Trace.TraceWarning($"Directory `{file.Name}` ignored, PreserveDirectoryStructure is disabled.");
+                    //Trace.TraceWarning($"Directory `{file.Name}` ignored, PreserveDirectoryStructure is disabled.");
                 }
                 else if (!Directory.Exists(fullPath))
                 {
-                    Trace.TraceInformation($"Create directory \"{file.Name}\"");
+                    //Trace.TraceInformation($"Create directory \"{file.Name}\"");
                     Directory.CreateDirectory(fullPath);
                     if (file.Time != null)
                         Directory.SetLastWriteTimeUtc(fullPath, (DateTime)file.Time);
@@ -389,19 +387,19 @@ namespace Tiny7z.Archive
                     // if file is not empty, it will need extraction
                     if (!file.IsEmpty)
                     {
-                        Trace.TraceInformation($"File included for extraction: {file.Name}, file size: {file.Size}");
+                        //Trace.TraceInformation($"File included for extraction: {file.Name}, file size: {file.Size}");
                         return false;
                     }
 
                     // create empty file right away
-                    Trace.TraceInformation($"Creating empty file \"{file.Name}\"");
+                    //Trace.TraceInformation($"Creating empty file \"{file.Name}\"");
                     File.WriteAllBytes(fullPath, new byte[0]);
                     if (file.Time != null)
                         File.SetLastWriteTimeUtc(fullPath, (DateTime)file.Time);
                 }
-                else
+                //else
                     // skipping file, so leave it as "processed" to avoid useless decoding
-                    Trace.TraceWarning($"File `{file.Name}` already exists. Skipping.");
+                    //Trace.TraceWarning($"File `{file.Name}` already exists. Skipping.");
             }
 
             // it's been "processed", no further processing necessary
@@ -475,7 +473,7 @@ namespace Tiny7z.Archive
             var ssi = streamsInfo.SubStreamsInfo;
             if (ui == null)
             {
-                Trace.TraceWarning("7zip: Missing header information to calculate output file sizes.");
+                //Trace.TraceWarning("7zip: Missing header information to calculate output file sizes.");
                 return;
             }
 

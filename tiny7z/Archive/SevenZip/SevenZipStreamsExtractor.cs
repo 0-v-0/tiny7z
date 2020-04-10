@@ -1,6 +1,5 @@
 ﻿using Tiny7z.Common;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using System.Runtime.InteropServices;

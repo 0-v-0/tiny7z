@@ -191,8 +191,8 @@ namespace Tiny7z.Archive
             //Trace.TraceInformation("Opening 7zip file:");
             //Trace.Indent();
 
-            try
-            {
+            //try
+            //{
                 //Trace.TraceInformation($"Version: {sig.ArchiveVersion.Major}.{sig.ArchiveVersion.Minor}");
                 //Trace.TraceInformation($"StartHeaderCRC: {sig.StartHeaderCRC.ToString("X8")}");
                 //Trace.TraceInformation($"NextHeaderOffset: {sig.StartHeader.NextHeaderOffset}");
@@ -248,12 +248,12 @@ namespace Tiny7z.Archive
                 }
 
                 IsValid = true;
-            }
-            finally
-            {
+            //}
+            //finally
+            //{
                 //Trace.Unindent();
                 //Trace.TraceInformation("Done parsing 7zip file header.");
-            }
+            //}
         }
 
         /// <summary>

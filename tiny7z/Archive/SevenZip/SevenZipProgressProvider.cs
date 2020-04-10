@@ -1,6 +1,4 @@
-﻿using Tiny7z.Common;
-using ManagedLzma.LZMA.Master;
-using System;
+﻿using ManagedLzma.LZMA.Master;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;

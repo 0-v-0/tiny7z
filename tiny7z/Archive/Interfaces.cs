@@ -1,5 +1,4 @@
-﻿using Tiny7z.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 

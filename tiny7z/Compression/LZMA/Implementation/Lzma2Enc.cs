@@ -353,7 +353,7 @@
 
             public CLzma2Enc(ISzAlloc alloc, ISzAlloc allocBig) // Lzma2Enc_Create
             {
-                Trace.AllocSmallObject("CLzma2Enc", alloc);
+                //Trace.AllocSmallObject("CLzma2Enc", alloc);
 
                 mProps.Lzma2EncProps_Init();
                 mProps.Lzma2EncProps_Normalize();

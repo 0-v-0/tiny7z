@@ -34,7 +34,7 @@ namespace Tiny7z.Common
             }
             return total;
         }
-
+        /*
         /// <summary>
         /// Alternative stream copy method to CopyTo. Stops writing when no more data is available from input.
         /// </summary>
@@ -53,7 +53,7 @@ namespace Tiny7z.Common
             }
             return total;
         }
-
+        */
         /// <summary>
         /// Returns a write buffer for TransferTo
         /// </summary>
@@ -61,7 +61,7 @@ namespace Tiny7z.Common
         {
             return new byte[4 << 14];
         }
-
+        /*
         /// <summary>
         /// Performs an unsigned bitwise right shift with the specified number
         /// </summary>
@@ -84,6 +84,6 @@ namespace Tiny7z.Common
                 return number >> bits;
             }
             return (number >> bits) + (2L << ~bits);
-        }
+        }*/
     }
 }

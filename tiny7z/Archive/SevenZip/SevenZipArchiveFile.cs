@@ -1,9 +1,8 @@
 ﻿using Tiny7z.Common;
-using System;
 
 namespace Tiny7z.Archive
 {
-    public class SevenZipArchiveFile : ArchiveFile
+	public class SevenZipArchiveFile : ArchiveFile
     {
         public ulong? UnPackIndex;
         public MultiFileStream.Source Source;

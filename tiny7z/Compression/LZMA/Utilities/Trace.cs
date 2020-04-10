@@ -759,7 +759,7 @@ namespace ManagedLzma.LZMA
         private static Context mContext;
 
 #endif
-
+        /*
         #region Public Methods
 
         public static void InitSession(Guid id)
@@ -796,21 +796,18 @@ namespace ManagedLzma.LZMA
         {
             return mContext.MatchThreadStart(fun);
         }
-#endif
 
-#if !DISABLE_TRACE
         public static void MatchThreadWait(Thread thread)
         {
             mContext.MatchThreadWait(thread);
         }
-#endif
 
-#if !DISABLE_TRACE
         public static void MatchThreadClose(Thread thread)
         {
             mContext.MatchThreadClose(thread);
         }
 #endif
+
 
         public static void MatchObjectCreate(object obj, string arg)
         {
@@ -832,7 +829,6 @@ namespace ManagedLzma.LZMA
             mContext.MatchObjectWait(obj, arg);
 #endif
         }
-
         public static int MatchStatusCode(string arg)
         {
 #if DISABLE_TRACE
@@ -882,6 +878,6 @@ namespace ManagedLzma.LZMA
 
         internal static void AllocSmallObject(string type, Master.LZMA.ISzAlloc alloc)
         {
-        }
+        }*/
     }
 }

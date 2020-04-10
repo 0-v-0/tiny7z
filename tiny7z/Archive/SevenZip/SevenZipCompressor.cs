@@ -1,17 +1,16 @@
 ﻿using Tiny7z.Common;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Tiny7z.Archive
 {
-    /// <summary>
-    /// 7zip compressor class to compress files into an archive.
-    /// </summary>
-    public class SevenZipCompressor : ICompressor
+	/// <summary>
+	/// 7zip compressor class to compress files into an archive.
+	/// </summary>
+	public class SevenZipCompressor : ICompressor
     {
         #region Public Properties
         public IReadOnlyList<ArchiveFile> Files
@@ -53,8 +52,8 @@ namespace Tiny7z.Archive
 
         public ICompressor AddDirectory(string inputDirectory, string archiveDirectory = null, bool recursive = true)
         {
-            Trace.TraceInformation($"Adding files from directory `{inputDirectory}`.");
-            Trace.Indent();
+            //Trace.TraceInformation($"Adding files from directory `{inputDirectory}`.");
+            //Trace.Indent();
             try
             {
                 inputDirectory = new Uri(inputDirectory).LocalPath;
@@ -68,7 +67,7 @@ namespace Tiny7z.Archive
                     foreach (var dir in new DirectoryInfo(inputDirectory).EnumerateDirectories("*.*", SearchOption.AllDirectories))
                     {
                         string dirName = (archiveDirectory + dir.FullName.Substring(inputDirectory.Length).Replace('\\', '/').TrimStart('/')).TrimStart('/');
-                        Trace.TraceInformation("Adding: " + dirName);
+                        //Trace.TraceInformation("Adding: " + dirName);
                         addedFiles.Add(new SevenZipArchiveFile()
                         {
                             Name = dirName,
@@ -85,7 +84,7 @@ namespace Tiny7z.Archive
                 foreach (var file in new DirectoryInfo(inputDirectory).EnumerateFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
                 {
                     string fileName = (archiveDirectory + (PreserveDirectoryStructure ? file.FullName.Substring(inputDirectory.Length).Replace('\\', '/').TrimStart('/') : Path.GetFileName(file.FullName))).TrimStart('/');
-                    Trace.TraceInformation("Adding: " + fileName);
+                    //Trace.TraceInformation("Adding: " + fileName);
                     addedFiles.Add(new SevenZipArchiveFile()
                     {
                         Name = fileName,
@@ -102,8 +101,8 @@ namespace Tiny7z.Archive
             }
             finally
             {
-                Trace.Unindent();
-                Trace.TraceInformation("Done adding files.");
+                //Trace.Unindent();
+                //Trace.TraceInformation("Done adding files.");
             }
 
             return this;
@@ -111,7 +110,7 @@ namespace Tiny7z.Archive
 
         public ICompressor AddFile(string inputFileName, string archiveFileName = null)
         {
-            Trace.TraceInformation($"Adding file `{inputFileName}`.");
+            //Trace.TraceInformation($"Adding file `{inputFileName}`.");
             if (!File.Exists(inputFileName))
                 throw new ArgumentException($"File `{Path.GetFileName(inputFileName)}` does not exist.");
             if (archiveFileName == null)
@@ -136,7 +135,7 @@ namespace Tiny7z.Archive
 
         public ICompressor AddFile(Stream stream, string archiveFileName, DateTime? time = null)
         {
-            Trace.TraceInformation($"Adding file `{archiveFileName}` from stream.");
+            //Trace.TraceInformation($"Adding file `{archiveFileName}` from stream.");
             archiveFileName = archiveFileName.Substring(Path.GetPathRoot(archiveFileName).Length).Replace('\\', '/');
 
             _Files.Add(new SevenZipArchiveFile()
@@ -159,8 +158,8 @@ namespace Tiny7z.Archive
             if (stream == null || header == null)
                 throw new SevenZipException("Compressor object has already been finalized.");
 
-            Trace.TraceInformation($"Compressing files.");
-            Trace.Indent();
+            //Trace.TraceInformation($"Compressing files.");
+            //Trace.Indent();
             try
             {
                 buildFilesInfo();
@@ -198,8 +197,8 @@ namespace Tiny7z.Archive
             }
             finally
             {
-                Trace.Unindent();
-                Trace.TraceInformation("Done compressing files.");
+                //Trace.Unindent();
+                //Trace.TraceInformation("Done compressing files.");
             }
 
             stream = null;
@@ -244,7 +243,7 @@ namespace Tiny7z.Archive
             var sc = new SevenZipStreamsCompressor(stream);
             sc.Method = Compression.Registry.Method.LZMA;
 
-            Trace.TraceInformation($"Compressing `{numStreams} files` into a solid block...");
+            //Trace.TraceInformation($"Compressing `{numStreams} files` into a solid block...");
 
             // actual compression using a sequence file stream and stream compressor
             var inputStream = new MultiFileStream(
@@ -302,7 +301,7 @@ namespace Tiny7z.Archive
             {
                 SevenZipArchiveFile file = _Files[(int)streamToFileIndex[i]];
 
-                Trace.TraceInformation($"Compressing `{file.Name}`, Size: `{file.Size} bytes`...");
+                //Trace.TraceInformation($"Compressing `{file.Name}`, Size: `{file.Size} bytes`...");
                 using (Stream source = file.Source.Get(FileAccess.Read))
                     css[i] = sc.Compress(source, progressProvider);
 
